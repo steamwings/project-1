@@ -37,6 +37,22 @@
       },
       "frameworks": {
         "netcoreapp3.0": {
+          "dependencies": {
+            "microsoft.entityframeworkcore.sqlserver": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "microsoft.entityframeworkcore.sqlserver.design": {
+              "target": "Package",
+              "version": "[1.1.6, )"
+            },
+            "microsoft.entityframeworkcore.tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.0.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
