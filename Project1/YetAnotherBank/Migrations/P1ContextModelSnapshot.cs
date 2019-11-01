@@ -33,6 +33,9 @@ namespace YetAnotherBank.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("InterestRateId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
 
@@ -41,6 +44,8 @@ namespace YetAnotherBank.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("InterestRateId");
 
                     b.ToTable("Accounts");
 
@@ -84,6 +89,25 @@ namespace YetAnotherBank.Migrations
                     b.ToTable("CustomerAccount");
                 });
 
+            modelBuilder.Entity("YAB.Models.InterestRate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Rate")
+                        .HasColumnType("decimal(5, 5)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InterestRates");
+                });
+
             modelBuilder.Entity("YAB.Models.Transaction", b =>
                 {
                     b.Property<int>("Id")
@@ -91,7 +115,7 @@ namespace YetAnotherBank.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AccountFromId")
+                    b.Property<int>("AccountFromId")
                         .HasColumnType("int");
 
                     b.Property<int?>("AccountToId")
@@ -134,6 +158,15 @@ namespace YetAnotherBank.Migrations
                 {
                     b.HasBaseType("YAB.Models.Account");
 
+                    b.Property<DateTime>("NextPaymentDue")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("PaymentAmount")
+                        .HasColumnType("money");
+
+                    b.Property<int>("PaymentsBehind")
+                        .HasColumnType("int");
+
                     b.HasDiscriminator().HasValue("Loan");
                 });
 
@@ -160,6 +193,15 @@ namespace YetAnotherBank.Migrations
                     b.HasDiscriminator().HasValue("BusinessAccount");
                 });
 
+            modelBuilder.Entity("YAB.Models.Account", b =>
+                {
+                    b.HasOne("YAB.Models.InterestRate", "InterestRate")
+                        .WithMany()
+                        .HasForeignKey("InterestRateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("YAB.Models.CustomerAccount", b =>
                 {
                     b.HasOne("YAB.Models.Account", "Account")
@@ -179,7 +221,9 @@ namespace YetAnotherBank.Migrations
                 {
                     b.HasOne("YAB.Models.Account", "AccountFrom")
                         .WithMany()
-                        .HasForeignKey("AccountFromId");
+                        .HasForeignKey("AccountFromId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("YAB.Models.Account", "AccountTo")
                         .WithMany()

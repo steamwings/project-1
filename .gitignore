@@ -2,5 +2,7 @@ logs/
 *.log
 *.swp
 *.lock
+*.pdb
 .vs/
 Project1/.vs
+obj/

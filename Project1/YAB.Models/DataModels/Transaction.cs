@@ -21,15 +21,21 @@ namespace YAB.Models
     {
         public int Id { get; set; }
         [Required]
+        [Display(Name = "Transaction Type")]
         public TransactionType Type { get; set; }
         [DisplayFormat(NullDisplayText = "Not a transfer.")]
+        [Display(Name = "Transfer Result")]
         public TransferResult? TransferResult { get; set; }
         [Required]
         [Column(TypeName = "money")]
+        [Display(Name = "Transaction Amount")]
         public decimal Amount { get; set; }
+        [Display(Name = "Transaction Time")]
         public DateTime Time { get; set; }
-
+        [Required]
+        [Display(Name = "Source Account")]
         public virtual Account AccountFrom { get; set; }
+        [Display(Name = "Destination Account")]
         public virtual Account AccountTo { get; set; }
 
         //public Transaction()

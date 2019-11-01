@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace YAB.Models
 {
@@ -20,8 +19,9 @@ namespace YAB.Models
             modelBuilder.Entity<BusinessAccount>().HasBaseType<CheckingAccount>();
             modelBuilder.Entity<Loan>().HasBaseType<Account>();
             modelBuilder.Entity<TermDeposit>().HasBaseType<Account>();
-
             modelBuilder.Entity<CustomerAccount>().HasKey(x => new { x.CustomerId, x.AccountId });
+
+
             //modelBuilder.Entity<Customer>()
             //.HasMany(c => c.Accounts).WithMany(i => i.Customer)
             //.Map(t => t.MapLeftKey("Id")
@@ -31,6 +31,7 @@ namespace YAB.Models
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<InterestRate> InterestRates { get; set; }
     }
 
     public class CustomerAccount

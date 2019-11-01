@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using YAB.Models;
 
-namespace YAB.Repositories
+namespace YAB.Models.Repos
 {
-    public class CustomerRepo
+    public class CustomerRepo : ICustomerRepo
     {
         private P1Context _context;
 
