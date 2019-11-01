@@ -1,4 +1,6 @@
-\logs
+logs/
 *.log
-*\lock
-.vs
+*.swp
+*.lock
+.vs/
+Project1/.vs
