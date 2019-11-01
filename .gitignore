@@ -3,6 +3,9 @@ logs/
 *.swp
 *.lock
 *.pdb
+*.dll
 .vs/
 Project1/.vs
 obj/
+Debug/
+*.g.cs
