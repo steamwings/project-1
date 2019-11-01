@@ -13,13 +13,13 @@ namespace YAB.Models
         public string Name { get; set; }
         [Required]
         [Column(TypeName = "money")]
-        public decimal Balance { get; set; }
+        public decimal Balance { get; set; } = 0;
         [Required]
         [Display(Name = "Last Updated")]
-        public DateTime LastUpdated { get; set; }
+        public DateTime LastUpdated { get; set; } = DateTime.Now;
         [Required]
         [Display(Name = "Interest Rate")]
-        public InterestRate InterestRate { get; set; }
+        public virtual InterestRate InterestRate { get; set; }
         public virtual ICollection<CustomerAccount> CustomerAccounts { get; set; }
     }
 
