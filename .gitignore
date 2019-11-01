@@ -1,3 +1,9 @@
 \logs
 *.log
 *\lock
+*.swp
+*.g.cs
+\.vs
+*.ide-*
+\obj
+\Debug
