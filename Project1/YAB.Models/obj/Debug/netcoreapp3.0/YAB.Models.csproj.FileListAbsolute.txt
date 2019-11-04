@@ -1,8 +1,0 @@
-C:\git\Project1\Project1\YAB.Models\bin\Debug\netcoreapp3.0\YAB.Models.deps.json
-C:\git\Project1\Project1\YAB.Models\bin\Debug\netcoreapp3.0\YAB.Models.dll
-C:\git\Project1\Project1\YAB.Models\obj\Debug\netcoreapp3.0\YAB.Models.csprojAssemblyReference.cache
-C:\git\Project1\Project1\YAB.Models\obj\Debug\netcoreapp3.0\YAB.Models.AssemblyInfoInputs.cache
-C:\git\Project1\Project1\YAB.Models\obj\Debug\netcoreapp3.0\YAB.Models.AssemblyInfo.cs
-C:\git\Project1\Project1\YAB.Models\bin\Debug\netcoreapp3.0\YAB.Models.pdb
-C:\git\Project1\Project1\YAB.Models\obj\Debug\netcoreapp3.0\YAB.Models.dll
-C:\git\Project1\Project1\YAB.Models\obj\Debug\netcoreapp3.0\YAB.Models.pdb
