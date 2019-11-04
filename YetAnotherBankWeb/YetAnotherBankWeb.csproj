@@ -5,12 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20191104151656_m1.cs" />
+    <Compile Remove="Migrations\20191104151656_m1.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="3.0.0" />
     <PackageReference Include="microsoft.entityframeworkcore.sqlserver.design" Version="1.1.6" />
     <PackageReference Include="microsoft.entityframeworkcore.tools" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
   </ItemGroup>
 
 </Project>

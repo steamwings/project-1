@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace YetAnotherBankWeb
+namespace YetAnotherBankWeb.Models
 {
     public partial class Customers
     {
@@ -11,6 +12,8 @@ namespace YetAnotherBankWeb
         }
 
         public long Id { get; set; }
+        [EmailAddress]
+        public string Email { get; set; }
         public string Username { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] Salt { get; set; }

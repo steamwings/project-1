@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace YetAnotherBankWeb
+namespace YetAnotherBankWeb.Models
 {
     public partial class InterestRates
     {
