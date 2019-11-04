@@ -25,8 +25,9 @@ namespace YetAnotherBankWeb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<Project1Context>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("SqlExpress")));
+                options.UseSqlServer(Configuration.GetConnectionString("DataConnection")));
             services.AddControllersWithViews();
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +45,7 @@ namespace YetAnotherBankWeb
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseAuthentication();
 
             app.UseRouting();
 
@@ -55,6 +57,14 @@ namespace YetAnotherBankWeb
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            // After auth
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllers();
+            //    endpoints.MapRazorPages();
+            //});
+
         }
     }
 }
