@@ -18,7 +18,7 @@ namespace YetAnotherBankWeb.Areas.Identity
             builder.ConfigureServices((context, services) => {
                 services.AddDbContext<IdentityContext>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("IdentityConnection")));
+                        context.Configuration.GetConnectionString("DataConnection")));
 
                 services.AddDefaultIdentity<YABUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<IdentityContext>();

@@ -4,14 +4,14 @@
     "C:\\git\\Project1\\YetAnotherBankWeb\\YetAnotherBankWeb.csproj": {}
   },
   "projects": {
-    "C:\\git\\Project1\\YetAnotherBankWeb\\YetAnotherBankWeb.csproj": {
+    "C:\\git\\Project1\\YAB.Models\\YAB.Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\git\\Project1\\YetAnotherBankWeb\\YetAnotherBankWeb.csproj",
-        "projectName": "YetAnotherBankWeb",
-        "projectPath": "C:\\git\\Project1\\YetAnotherBankWeb\\YetAnotherBankWeb.csproj",
+        "projectUniqueName": "C:\\git\\Project1\\YAB.Models\\YAB.Models.csproj",
+        "projectName": "YAB.Models",
+        "projectPath": "C:\\git\\Project1\\YAB.Models\\YAB.Models.csproj",
         "packagesPath": "C:\\Users\\wande\\.nuget\\packages\\",
-        "outputPath": "C:\\git\\Project1\\YetAnotherBankWeb\\obj\\",
+        "outputPath": "C:\\git\\Project1\\YAB.Models\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\wande\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -38,11 +38,93 @@
       "frameworks": {
         "netcoreapp3.0": {
           "dependencies": {
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer.Design": {
+              "target": "Package",
+              "version": "[1.1.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\git\\Project1\\YetAnotherBankWeb\\YetAnotherBankWeb.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\git\\Project1\\YetAnotherBankWeb\\YetAnotherBankWeb.csproj",
+        "projectName": "YetAnotherBankWeb",
+        "projectPath": "C:\\git\\Project1\\YetAnotherBankWeb\\YetAnotherBankWeb.csproj",
+        "packagesPath": "C:\\Users\\wande\\.nuget\\packages\\",
+        "outputPath": "C:\\git\\Project1\\YetAnotherBankWeb\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\wande\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.0": {
+            "projectReferences": {
+              "C:\\git\\Project1\\YAB.Models\\YAB.Models.csproj": {
+                "projectPath": "C:\\git\\Project1\\YAB.Models\\YAB.Models.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.0": {
+          "dependencies": {
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[3.0.0, )"
             },
             "Microsoft.AspNetCore.Identity.UI": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
               "target": "Package",
               "version": "[3.0.0, )"
             },
@@ -61,12 +143,6 @@
             "microsoft.entityframeworkcore.sqlserver.design": {
               "target": "Package",
               "version": "[1.1.6, )"
-            },
-            "microsoft.entityframeworkcore.tools": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[3.0.0, )"
             }
           },
           "imports": [

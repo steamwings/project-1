@@ -2643,6 +2643,21 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XmlSerializer.dll": {}
         }
+      },
+      "YAB.Models/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.0",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.SqlServer": "3.0.0",
+          "Microsoft.EntityFrameworkCore.SqlServer.Design": "1.1.6",
+          "Microsoft.VisualStudio.Web.CodeGeneration.Design": "3.0.0"
+        },
+        "compile": {
+          "bin/placeholder/YAB.Models.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/YAB.Models.dll": {}
+        }
       }
     }
   },
@@ -8487,17 +8502,23 @@
         "system.xml.xmlserializer.4.3.0.nupkg.sha512",
         "system.xml.xmlserializer.nuspec"
       ]
+    },
+    "YAB.Models/1.0.0": {
+      "type": "project",
+      "path": "../YAB.Models/YAB.Models.csproj",
+      "msbuildProject": "../YAB.Models/YAB.Models.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.0": [
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 3.0.0",
       "Microsoft.AspNetCore.Identity.UI >= 3.0.0",
+      "Microsoft.EntityFrameworkCore.Tools >= 3.0.0",
       "Microsoft.Extensions.Logging.Debug >= 3.0.0",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 3.0.0",
+      "YAB.Models >= 1.0.0",
       "microsoft.entityframeworkcore.sqlserver >= 3.0.0",
-      "microsoft.entityframeworkcore.sqlserver.design >= 1.1.6",
-      "microsoft.entityframeworkcore.tools >= 3.0.0"
+      "microsoft.entityframeworkcore.sqlserver.design >= 1.1.6"
     ]
   },
   "packageFolders": {
@@ -8525,7 +8546,11 @@
       },
       "frameworks": {
         "netcoreapp3.0": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\git\\Project1\\YAB.Models\\YAB.Models.csproj": {
+              "projectPath": "C:\\git\\Project1\\YAB.Models\\YAB.Models.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -8545,6 +8570,12 @@
             "target": "Package",
             "version": "[3.0.0, )"
           },
+          "Microsoft.EntityFrameworkCore.Tools": {
+            "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+            "suppressParent": "All",
+            "target": "Package",
+            "version": "[3.0.0, )"
+          },
           "Microsoft.Extensions.Logging.Debug": {
             "target": "Package",
             "version": "[3.0.0, )"
@@ -8560,12 +8591,6 @@
           "microsoft.entityframeworkcore.sqlserver.design": {
             "target": "Package",
             "version": "[1.1.6, )"
-          },
-          "microsoft.entityframeworkcore.tools": {
-            "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-            "suppressParent": "All",
-            "target": "Package",
-            "version": "[3.0.0, )"
           }
         },
         "imports": [

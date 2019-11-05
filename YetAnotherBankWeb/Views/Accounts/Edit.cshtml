@@ -1,7 +1,8 @@
-﻿@model YetAnotherBankWeb.Accounts
+﻿@model YetAnotherBankWeb.Models.Accounts
 
 @{
     ViewData["Title"] = "Edit";
+    Layout = "~/_Layout.cshtml";
 }
 
 <h1>Edit</h1>
@@ -41,6 +42,11 @@
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Business" /> @Html.DisplayNameFor(model => model.Business)
                 </label>
             </div>
             <div class="form-group">
