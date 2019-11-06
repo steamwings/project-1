@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YetAnotherBankWeb", "YetAnotherBankWeb\YetAnotherBankWeb.csproj", "{03883401-1739-464C-97DA-36BF2F50AEDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAB.Models", "YAB.Models\YAB.Models.csproj", "{18EC4D59-2990-4D4D-9253-D1592B50D871}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YAB.Models", "YAB.Models\YAB.Models.csproj", "{18EC4D59-2990-4D4D-9253-D1592B50D871}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAB.BusinessLayer", "BusinessLayer\YAB.BusinessLayer.csproj", "{1DA0486D-9EBC-4B0C-84FE-2FF4C3C25BA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{18EC4D59-2990-4D4D-9253-D1592B50D871}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18EC4D59-2990-4D4D-9253-D1592B50D871}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18EC4D59-2990-4D4D-9253-D1592B50D871}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DA0486D-9EBC-4B0C-84FE-2FF4C3C25BA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DA0486D-9EBC-4B0C-84FE-2FF4C3C25BA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DA0486D-9EBC-4B0C-84FE-2FF4C3C25BA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DA0486D-9EBC-4B0C-84FE-2FF4C3C25BA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BusinessLayer\YAB.BusinessLayer.csproj" />
     <ProjectReference Include="..\YAB.Models\YAB.Models.csproj" />
   </ItemGroup>
 

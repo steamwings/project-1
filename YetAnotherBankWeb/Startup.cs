@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using YAB.Models;
+using YAB.BusinessLayer;
 
 namespace YetAnotherBankWeb
 {
@@ -46,10 +47,10 @@ namespace YetAnotherBankWeb
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseAuthentication();
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -57,14 +58,9 @@ namespace YetAnotherBankWeb
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
+                //endpoints.MapControllers(); //after auth?
             });
-
-            // After auth
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllers();
-            //    endpoints.MapRazorPages();
-            //});
 
         }
     }

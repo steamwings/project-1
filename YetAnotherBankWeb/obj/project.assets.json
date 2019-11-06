@@ -2644,6 +2644,19 @@
           "lib/netstandard1.3/System.Xml.XmlSerializer.dll": {}
         }
       },
+      "YAB.BusinessLayer/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.0",
+        "dependencies": {
+          "YAB.Models": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/YAB.BusinessLayer.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/YAB.BusinessLayer.dll": {}
+        }
+      },
       "YAB.Models/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.0",
@@ -8503,6 +8516,11 @@
         "system.xml.xmlserializer.nuspec"
       ]
     },
+    "YAB.BusinessLayer/1.0.0": {
+      "type": "project",
+      "path": "../BusinessLayer/YAB.BusinessLayer.csproj",
+      "msbuildProject": "../BusinessLayer/YAB.BusinessLayer.csproj"
+    },
     "YAB.Models/1.0.0": {
       "type": "project",
       "path": "../YAB.Models/YAB.Models.csproj",
@@ -8516,6 +8534,7 @@
       "Microsoft.EntityFrameworkCore.Tools >= 3.0.0",
       "Microsoft.Extensions.Logging.Debug >= 3.0.0",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 3.0.0",
+      "YAB.BusinessLayer >= 1.0.0",
       "YAB.Models >= 1.0.0",
       "microsoft.entityframeworkcore.sqlserver >= 3.0.0",
       "microsoft.entityframeworkcore.sqlserver.design >= 1.1.6"
@@ -8547,6 +8566,9 @@
       "frameworks": {
         "netcoreapp3.0": {
           "projectReferences": {
+            "C:\\git\\Project1\\BusinessLayer\\YAB.BusinessLayer.csproj": {
+              "projectPath": "C:\\git\\Project1\\BusinessLayer\\YAB.BusinessLayer.csproj"
+            },
             "C:\\git\\Project1\\YAB.Models\\YAB.Models.csproj": {
               "projectPath": "C:\\git\\Project1\\YAB.Models\\YAB.Models.csproj"
             }

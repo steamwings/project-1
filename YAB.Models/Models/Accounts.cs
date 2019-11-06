@@ -14,16 +14,25 @@ namespace YAB.Models
         }
 
         public long Id { get; set; }
+        [Required]
         [MinLength(4, ErrorMessage = "Name cannot be less than 4 characters.")]
         public string Name { get; set; }        
+        [Required]
+        public AccountTypes Type { get; set; }
+        [Required]
         [DataType(DataType.Currency)]
         public decimal Balance { get; set; }
+        [Required]
         public int InterestId { get; set; }
         [DataType(DataType.Date)]
+        [Required]
         public DateTime Created { get; set; }
+        [Required]
         [DataType(DataType.DateTime)]
         public DateTime LastUpdated { get; set; }
+        [Required]
         public bool Active { get; set; }
+        [Required]
         public bool Business { get; set; }
 
         public virtual InterestRates Interest { get; set; }

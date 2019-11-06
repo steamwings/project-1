@@ -1,9 +1,11 @@
-﻿@model YetAnotherBankWeb.Models.Account
+﻿@model YAB.Models.CreateAccountViewModel
 
 @{
-    ViewData["Title"] = "Create";
-    Layout = "~/_Layout.cshtml";
+    ViewData["Title"] = "Create Account";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<script src="~/js/account.js"></script>
 
 <h1>Create</h1>
 
@@ -14,16 +16,26 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="InterestId" class="control-label"></label>
+                <select onchange="submitVisible();" asp-for="InterestId" class="form-control" asp-items="ViewBag.AccountType">
+                    <option disabled selected value=""> -- select account type -- </option>
+                </select>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Business" /> @Html.DisplayNameFor(model => model.Business)
-                </label>
+@if(ViewBag.TypeName == "Investment")
+{
+            <div id="inputTerm" class="form-group">
+                <label class="control-label" asp-for="TermYears"></label>
+                <input class="form-control" asp-for="TermYears"/> @Html.DisplayNameFor(model => model.TermYears)
             </div>
-            <div class="form-group">
+}
+@if(ViewBag.TypeName == "Loan")
+{
+            <div style="display:none" id="inputLoan" class="form-group">
+                <label class="control-label" asp-for="LoanAmount"></label>
+                <input class="form-control" asp-for="LoanAmount" /> @Html.DisplayNameFor(model=> model.LoanAmount)
+            </div>
+}
+            <div id="submitDiv" style="display:none" class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -31,9 +43,10 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Cancel</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
 }

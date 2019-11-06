@@ -22,6 +22,7 @@ namespace YAB.Models
         public virtual DbSet<DebtAccounts> DebtAccounts { get; set; }
         public virtual DbSet<InterestRates> InterestRates { get; set; }
         public virtual DbSet<TermAccounts> TermAccounts { get; set; }
+        public virtual DbSet<AccountTypes> AccountTypes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -35,13 +36,13 @@ namespace YAB.Models
         {
             modelBuilder.Entity<Accounts>(entity =>
             {
-                entity.Property(e => e.Balance).HasColumnType("decimal(20, 6)");
+                entity.Property(e => e.Balance).HasColumnType("decimal(20, 6)").HasDefaultValue(0);
 
-                entity.Property(e => e.Created).HasColumnType("datetime");
+                entity.Property(e => e.Created).HasColumnType("datetime").HasDefaultValueSql("getdate()");
 
                 entity.Property(e => e.InterestId).HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.LastUpdated).HasColumnType("datetime");
+                entity.Property(e => e.LastUpdated).HasColumnType("datetime").HasDefaultValueSql("getdate()");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -92,6 +93,8 @@ namespace YAB.Models
                 entity.Property(e => e.NextPaymentDue).HasColumnType("datetime");
 
                 entity.Property(e => e.PaymentAmount).HasColumnType("decimal(20, 6)");
+
+                entity.Property(e => e.PaymentsBehind).HasDefaultValue(0);
 
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.DebtAccounts) // WithMany here allows 0 or 1

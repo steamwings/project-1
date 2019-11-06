@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YAB.Models;
 
-namespace YetAnotherBankWeb.Migrations
+namespace YAB.Migrations
 {
     [DbContext(typeof(Project1Context))]
-    partial class Project1ContextModelSnapshot : ModelSnapshot
+    [Migration("20191105143124_AddAccountTypes")]
+    partial class AddAccountTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,7 +29,6 @@ namespace YetAnotherBankWeb.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -46,17 +47,13 @@ namespace YetAnotherBankWeb.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("Balance")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20, 6)")
-                        .HasDefaultValue(0m);
+                        .HasColumnType("decimal(20, 6)");
 
                     b.Property<bool>("Business")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("datetime");
 
                     b.Property<int>("InterestId")
                         .ValueGeneratedOnAdd()
@@ -64,16 +61,14 @@ namespace YetAnotherBankWeb.Migrations
                         .HasDefaultValueSql("((1))");
 
                     b.Property<DateTime>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<int>("TypeId")
+                    b.Property<int?>("TypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -136,9 +131,7 @@ namespace YetAnotherBankWeb.Migrations
                         .HasColumnType("decimal(20, 6)");
 
                     b.Property<int>("PaymentsBehind")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -162,12 +155,7 @@ namespace YetAnotherBankWeb.Migrations
                     b.Property<decimal>("Rate")
                         .HasColumnType("decimal(20, 6)");
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TypeId");
 
                     b.ToTable("InterestRates");
                 });
@@ -202,9 +190,7 @@ namespace YetAnotherBankWeb.Migrations
 
                     b.HasOne("YAB.Models.AccountTypes", "Type")
                         .WithMany()
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TypeId");
                 });
 
             modelBuilder.Entity("YAB.Models.CustomersToAccounts", b =>
@@ -228,15 +214,6 @@ namespace YetAnotherBankWeb.Migrations
                         .WithMany("DebtAccounts")
                         .HasForeignKey("AccountId")
                         .HasConstraintName("FK_DebtAccounts_Accounts")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("YAB.Models.InterestRates", b =>
-                {
-                    b.HasOne("YAB.Models.AccountTypes", "Type")
-                        .WithMany("InterestRates")
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
