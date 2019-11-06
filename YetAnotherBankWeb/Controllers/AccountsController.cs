@@ -119,13 +119,30 @@ namespace YetAnotherBankWeb.Controllers
                     _logger.LogWarning($"Invalid account type '{account.Name}'.");
                     return RedirectToAction(nameof(Index)); // TODO Error
             }
-            Accounts added = _context.Accounts.Add(a).Entity;
-            _context.CustomersToAccounts.Add(new CustomersToAccounts()
+            using(var transaction = _context.Database.BeginTransaction())
             {
-                AccountId = added.Id,
-                CustomerId = UID()
-            }) ;
-            await _context.SaveChangesAsync();
+                try
+                {
+                    var userId = UID();
+                    if (userId is null) return NotFound("uid null");
+                    if (_context.Customers.Find(userId) is null) return NotFound("user not found");
+                    Accounts added = _context.Accounts.Add(a).Entity;
+                    await _context.SaveChangesAsync();
+                    if (_context.Accounts.Find(added.Id) is null) return NotFound("no acct");
+                    _context.CustomersToAccounts.Add(new CustomersToAccounts()
+                    {
+                        AccountId = added.Id,
+                        CustomerId = UID()
+                    });
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch(Exception e)
+                {
+                    _logger.LogError("Create account failed.",e);
+                    throw e;
+                }
+            }
             return RedirectToAction(nameof(Index)); //View("Details", account);
         }
 

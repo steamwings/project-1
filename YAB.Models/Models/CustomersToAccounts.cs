@@ -11,7 +11,6 @@ namespace YAB.Models
         public long AccountId { get; set; }
         [Required]
         public string CustomerId { get; set; }
-
         public virtual Accounts Account { get; set; }
         public virtual Customers Customer { get; set; }
     }

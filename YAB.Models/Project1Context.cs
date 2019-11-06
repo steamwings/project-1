@@ -78,13 +78,13 @@ namespace YAB.Models
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.CustomersToAccounts)
                     .HasForeignKey(d => d.AccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_CustomersToAccounts_Accounts");
 
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.CustomersToAccounts)
                     .HasForeignKey(d => d.CustomerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_CustomersToAccounts_Customers");
             });
 

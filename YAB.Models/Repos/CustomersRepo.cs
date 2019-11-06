@@ -18,6 +18,7 @@ namespace YAB.Models.Repos
         public async void Add(string id)
         {
             await _context.Customers.AddAsync(new Customers() { Id = id });
+            await _context.SaveChangesAsync();
         }
 
         public ValueTask<Customers> Get(string id)
