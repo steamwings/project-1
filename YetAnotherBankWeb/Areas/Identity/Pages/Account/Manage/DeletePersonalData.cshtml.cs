@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using YAB.Models;
+using YAB.Models.Repos;
 using YetAnotherBankWeb.Areas.Identity.Data;
 
 namespace YetAnotherBankWeb.Areas.Identity.Pages.Account.Manage
@@ -14,15 +16,18 @@ namespace YetAnotherBankWeb.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<YABUser> _userManager;
         private readonly SignInManager<YABUser> _signInManager;
         private readonly ILogger<DeletePersonalDataModel> _logger;
+        private readonly CustomersRepo _custRepo;
 
         public DeletePersonalDataModel(
             UserManager<YABUser> userManager,
             SignInManager<YABUser> signInManager,
+            Project1Context context,
             ILogger<DeletePersonalDataModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _custRepo = new CustomersRepo(context);
         }
 
         [BindProperty]
@@ -66,14 +71,14 @@ namespace YetAnotherBankWeb.Areas.Identity.Pages.Account.Manage
                     return Page();
                 }
             }
-
+            var realUserId = user.Id;
             var result = await _userManager.DeleteAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
             if (!result.Succeeded)
             {
                 throw new InvalidOperationException($"Unexpected error occurred deleting user with ID '{userId}'.");
             }
-
+            await _custRepo.Delete(realUserId);
             await _signInManager.SignOutAsync();
 
             _logger.LogInformation("User with ID '{UserId}' deleted themselves.", userId);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using YetAnotherBankWeb;
 
 namespace YAB.Models.Repos
@@ -14,9 +15,24 @@ namespace YAB.Models.Repos
             _context = c;
         }
 
-        public Customers Get(int id)
+        public async void Add(string id)
         {
-            return _context.Customers.Find(id);
+            await _context.Customers.AddAsync(new Customers() { Id = id });
+        }
+
+        public ValueTask<Customers> Get(string id)
+        {
+            return _context.Customers.FindAsync(id);
+        }
+
+        public async Task<bool> Delete(string id)
+        {
+            if (id is null) return false;
+            var c = _context.Customers.Find(id);
+            if (c is null) return false;
+            _context.Customers.Remove(c);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
     }

@@ -6,14 +6,13 @@
 }
 
 <script src="~/js/account.js"></script>
-
 <h1>New</h1>
 
 <h4>Account</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="New">
+        <form asp-action="Create" onload="location.reload();" onchange="checkShowSubmit();">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -26,12 +25,39 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="Type" class="control-label"></label>
-                <select onchange="submitVisible();" asp-for="Type" class="form-control" asp-items="ViewBag.AccountTypeId">
+                <label asp-for="TypeId" class="control-label"></label>
+                <select onchange="updateFromType();" asp-for="TypeId" class="form-control" asp-items="ViewBag.AccountTypeId">
                     <option disabled selected value=""> -- select account type -- </option>
                 </select>
             </div>
-            <div id="submitDiv" style="display:none" class="form-group">
+            <div id="divChecking" style="display:none" class="form-group">
+                <label asp-for="InterestId" class="control-label"></label>
+                <select id="InterestId_Checking" asp-for="InterestId" class="form-control" asp-items="ViewBag.InterestId_Checking">
+                    <option disabled selected value=""> -- select interest rate -- </option>
+                </select>
+            </div>
+
+            <div id="divTerm" style="display:none" class="form-group">
+                @*<label class="control-label" asp-for="TermYears"></label>
+                    <input class="form-control" asp-for="TermYears" />
+                    <span asp-validation-for="TermYears" class="text-danger"></span>*@
+                <label asp-for="InterestId" class="control-label"></label>
+                <select id="InterestId_Investment" asp-for="InterestId" class="form-control" asp-items="ViewBag.InterestId_Investment">
+                    <option disabled selected value=""> -- select interest rate -- </option>
+                </select>
+            </div>
+            <div id="divLoan" style="display:none" class="form-group">
+                <label class="control-label" asp-for="LoanAmount"></label>
+                <input class="form-control" asp-for="LoanAmount" />
+                <span asp-validation-for="LoanAmount" class="text-danger"></span>
+                <div>
+                    <label asp-for="InterestId" class="control-label"></label>
+                    <select id="InterestId_Loan" asp-for="InterestId" class="form-control" asp-items="ViewBag.InterestId_Loan">
+                        <option disabled selected value=""> -- select interest rate -- </option>
+                    </select>
+                </div>
+            </div>
+            <div id="divSubmit" style="display:none" class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>

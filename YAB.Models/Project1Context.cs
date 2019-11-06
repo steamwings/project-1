@@ -99,7 +99,7 @@ namespace YAB.Models
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.DebtAccounts) // WithMany here allows 0 or 1
                     .HasForeignKey(d => d.AccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_DebtAccounts_Accounts");
             });
 
@@ -119,7 +119,7 @@ namespace YAB.Models
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.TermAccounts) // WithMany here allows 0 or 1
                     .HasForeignKey(d => d.AccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_TermAccounts_Accounts");
             });
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YAB.Models;
 
-namespace YetAnotherBankWeb.Migrations
+namespace YAB.Migrations
 {
     [DbContext(typeof(Project1Context))]
-    partial class Project1ContextModelSnapshot : ModelSnapshot
+    [Migration("20191106200739_DeleteCustomers")]
+    partial class DeleteCustomers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,16 +87,6 @@ namespace YetAnotherBankWeb.Migrations
                     b.ToTable("Accounts");
                 });
 
-            modelBuilder.Entity("YAB.Models.Customers", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Customers");
-                });
-
             modelBuilder.Entity("YAB.Models.CustomersToAccounts", b =>
                 {
                     b.Property<long>("Id")
@@ -107,13 +99,11 @@ namespace YetAnotherBankWeb.Migrations
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
-
-                    b.HasIndex("CustomerId");
 
                     b.ToTable("CustomersToAccounts");
                 });
@@ -215,12 +205,6 @@ namespace YetAnotherBankWeb.Migrations
                         .WithMany("CustomersToAccounts")
                         .HasForeignKey("AccountId")
                         .HasConstraintName("FK_CustomersToAccounts_Accounts")
-                        .IsRequired();
-
-                    b.HasOne("YAB.Models.Customers", "Customer")
-                        .WithMany("CustomersToAccounts")
-                        .HasForeignKey("CustomerId")
-                        .HasConstraintName("FK_CustomersToAccounts_Customers")
                         .IsRequired();
                 });
 

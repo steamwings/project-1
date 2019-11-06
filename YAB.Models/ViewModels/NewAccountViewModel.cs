@@ -12,6 +12,11 @@ namespace YAB.Models
         [Display(Prompt = "Is this a business account?")]
         public bool Business { get; set; }
         [Display(Name = "Account Type")]
-        public AccountTypes Type { get; set; }
+        public int TypeId { get; set; }
+        [Display(Name = "Interest Rate")]
+        public int InterestId { get; set; }
+        [DataType(DataType.Currency)]
+        [Display(Name = "Loan Sum", Prompt = "What is the size of the loan?")]
+        public decimal? LoanAmount { get; set; }
     }
 }

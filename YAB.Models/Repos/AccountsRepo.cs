@@ -15,14 +15,19 @@ namespace YAB.Models.Repos
             _context = c;
         }
 
-        public Accounts Get(int id)
+        private IQueryable<Accounts> UserAccounts(string userId)
         {
-            return _context.Accounts.Find(id);
+            return _context.CustomersToAccounts.Where(ca => ca.CustomerId == userId).Select(ca => ca.Account);
         }
 
-        public IQueryable<Accounts> GetQueryable()
+        public Accounts Get(string userId, int accId)
         {
-            return _context.Accounts.Include(a => a.Interest);
+            return UserAccounts(userId).Where(a => a.Id == accId).Single();
+        }
+
+        public IQueryable<Accounts> GetQueryable(string userId)
+        {
+            return _context.Accounts.Intersect(UserAccounts(userId)).Include(a => a.Interest);
         }
     }
 }

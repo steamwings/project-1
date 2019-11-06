@@ -10,9 +10,8 @@ namespace YAB.Models
         {
             CustomersToAccounts = new HashSet<CustomersToAccounts>();
         }
-
-        public long Id { get; set; }
-
+        [Key]
+        public string Id { get; set; }
         public virtual ICollection<CustomersToAccounts> CustomersToAccounts { get; set; }
     }
 }

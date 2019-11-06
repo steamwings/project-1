@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using YetAnotherBankWeb.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
+using YAB.Models;
+using YAB.Models.Repos;
 
 namespace YetAnotherBankWeb.Areas.Identity.Pages.Account
 {
@@ -15,11 +17,13 @@ namespace YetAnotherBankWeb.Areas.Identity.Pages.Account
     {
         private readonly UserManager<YABUser> _userManager;
         private readonly IEmailSender _sender;
+        private readonly CustomersRepo _custRepo;
 
-        public RegisterConfirmationModel(UserManager<YABUser> userManager, IEmailSender sender)
+        public RegisterConfirmationModel(Project1Context context, UserManager<YABUser> userManager, IEmailSender sender)
         {
             _userManager = userManager;
             _sender = sender;
+            _custRepo = new CustomersRepo(context);
         }
 
         public string Email { get; set; }
@@ -40,13 +44,14 @@ namespace YetAnotherBankWeb.Areas.Identity.Pages.Account
             {
                 return NotFound($"Unable to load user with email '{email}'.");
             }
-
+            
             Email = email;
             // Once you add a real email sender, you should remove this code that lets you confirm the account
             DisplayConfirmAccountLink = true;
             if (DisplayConfirmAccountLink)
             {
                 var userId = await _userManager.GetUserIdAsync(user);
+                _custRepo.Add(userId);
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 EmailConfirmationUrl = Url.Page(

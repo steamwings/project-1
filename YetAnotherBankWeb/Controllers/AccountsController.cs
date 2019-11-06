@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using YAB.Models;
 using YAB.Models.Repos;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using YetAnotherBankWeb.Areas.Identity.Data;
 
 namespace YetAnotherBankWeb.Controllers
 {
@@ -18,9 +21,16 @@ namespace YetAnotherBankWeb.Controllers
         private readonly AccountsRepo _repo;
         private readonly Project1Context _context; //TODO Remove
         private readonly ILogger<AccountsController> _logger;
+        private readonly UserManager<YABUser> _userManager;
 
-        public AccountsController(ILogger<AccountsController> logger, Project1Context context)
+        private string UID()
         {
+            return _userManager.GetUserId(User);
+        }
+
+        public AccountsController(Project1Context context, UserManager<YABUser> userManager, ILogger<AccountsController> logger)
+        {
+            _userManager = userManager;
             _logger = logger;
             _context = context;
             _repo = new AccountsRepo(context);
@@ -29,7 +39,7 @@ namespace YetAnotherBankWeb.Controllers
         // GET: Accounts
         public async Task<IActionResult> Index()
         {
-            return View(await _repo.GetQueryable().ToListAsync());
+            return View(await _repo.GetQueryable(UID()).ToListAsync());
         }
 
         // GET: Accounts/Details/5
@@ -55,6 +65,9 @@ namespace YetAnotherBankWeb.Controllers
         public IActionResult New()
         {
             ViewData["AccountTypeId"] = new SelectList(_context.AccountTypes, "Id", "Name");
+            ViewData["InterestId_Checking"] = new SelectList(_context.InterestRates.Where(i => i.Type.Name == "Checking"), "Id", "Name");
+            ViewData["InterestId_Loan"] = new SelectList(_context.InterestRates.Where(i => i.Type.Name == "Loan"), "Id", "Name");
+            ViewData["InterestId_Investment"] = new SelectList(_context.InterestRates.Where(i => i.Type.Name == "Investment"), "Id", "Name");
             return View();
         }
 
@@ -63,24 +76,13 @@ namespace YetAnotherBankWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult New([Bind("Name,Business,Type")] NewAccountViewModel account)
+        public async Task<IActionResult> Create(NewAccountViewModel account)
         {
-            ViewBag.TypeName = account.Type.Name;
-            //if (_context.AccountTypes.Contains(account.Type))
-            //{
-                ViewData["InterestId"] = new SelectList(_context.InterestRates.Where(i=>i.Type == account.Type), "Id", "Name");
-                return View("Create", account);
-            //}
-            //return RedirectToAction(nameof(Index));
-            //return View(account);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("InterestId,LoanAmount,TermYears")] CreateAccountViewModel account)
-        {
+            //ViewData["InterestId"] = new SelectList(_context.InterestRates.Where(i=>i.Type == account.Type), "Id", "Name");
             if (!ModelState.IsValid) return RedirectToAction(nameof(Index)); //TODO Indicate error
 
+            var type = _context.AccountTypes.Find(account.TypeId);
+            if (type is null) return NotFound("type");
             Accounts a = new Accounts()
             {
                 Balance = 0,
@@ -89,27 +91,42 @@ namespace YetAnotherBankWeb.Controllers
                 Business = account.Business,
                 Created = DateTime.Now,
                 LastUpdated = DateTime.Now,
-                Type = account.Type,
+                Type = type,
                 InterestId = account.InterestId
             };
-            switch (account.Name)
+
+            if (type.Name is null) return NotFound("name");
+            switch (type.Name)
             {
                 case "Checking":
                     break;
                 case "Investment":
-                    a.TermAccounts.Add(new TermAccounts() { /*TODO*/ });
+                    var years = _context.InterestRates.Find(account.InterestId).Years.Value;
+                    a.TermAccounts.Add(new TermAccounts()
+                    {
+                        MaturationDate = DateTime.Now.AddYears(years)
+                    });
                     break;
                 case "Loan":
-                    a.DebtAccounts.Add(new DebtAccounts() { /*TODO*/ });
+                    a.DebtAccounts.Add(new DebtAccounts()
+                    {
+                        PaymentAmount = 250.00M, //TODO Don't hardcode
+                        PaymentsBehind = 0,
+                        NextPaymentDue = DateTime.Now.AddMonths(1)
+                    }) ;
                     break;
                 default:
                     _logger.LogWarning($"Invalid account type '{account.Name}'.");
                     return RedirectToAction(nameof(Index)); // TODO Error
             }
-
-            _context.Accounts.Add(a);
+            Accounts added = _context.Accounts.Add(a).Entity;
+            _context.CustomersToAccounts.Add(new CustomersToAccounts()
+            {
+                AccountId = added.Id,
+                CustomerId = UID()
+            }) ;
             await _context.SaveChangesAsync();
-            return View(account);
+            return RedirectToAction(nameof(Index)); //View("Details", account);
         }
 
         // GET: Accounts/Edit/5

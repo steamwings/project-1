@@ -7,6 +7,26 @@
   <ItemGroup>
     <Compile Remove="Migrations\20191105133520_M.cs" />
     <Compile Remove="Migrations\20191105133520_M.Designer.cs" />
+    <Compile Remove="Migrations\20191106185944_TempAddFakeId.cs" />
+    <Compile Remove="Migrations\20191106185944_TempAddFakeId.Designer.cs" />
+    <Compile Remove="Migrations\20191106191504_TempAddFakeId.cs" />
+    <Compile Remove="Migrations\20191106191504_TempAddFakeId.Designer.cs" />
+    <Compile Remove="Migrations\20191106191940_CustomerTemp1.cs" />
+    <Compile Remove="Migrations\20191106191940_CustomerTemp1.Designer.cs" />
+    <Compile Remove="Migrations\20191106192544_CustomerTemp1.cs" />
+    <Compile Remove="Migrations\20191106192544_CustomerTemp1.Designer.cs" />
+    <Compile Remove="Migrations\20191106192622_CustomerTemp2.cs" />
+    <Compile Remove="Migrations\20191106192622_CustomerTemp2.Designer.cs" />
+    <Compile Remove="Migrations\20191106193430_CustomerTemp1.cs" />
+    <Compile Remove="Migrations\20191106193430_CustomerTemp1.Designer.cs" />
+    <Compile Remove="Migrations\20191106193528_CustomerTemp2.cs" />
+    <Compile Remove="Migrations\20191106193528_CustomerTemp2.Designer.cs" />
+    <Compile Remove="Migrations\20191106194350_CustomerTemp2.cs" />
+    <Compile Remove="Migrations\20191106194350_CustomerTemp2.Designer.cs" />
+    <Compile Remove="Migrations\20191106194635_CustomerTemp2.cs" />
+    <Compile Remove="Migrations\20191106194635_CustomerTemp2.Designer.cs" />
+    <Compile Remove="Migrations\20191106194707_CustomerTemp3.cs" />
+    <Compile Remove="Migrations\20191106194707_CustomerTemp3.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

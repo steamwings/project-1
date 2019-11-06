@@ -176,7 +176,6 @@ C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Shared\_Co
 C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Shared\_LoginPartial.cshtml.g.cs
 C:\git\Project1\YetAnotherBankWeb\bin\Debug\netcoreapp3.0\YAB.Models.dll
 C:\git\Project1\YetAnotherBankWeb\bin\Debug\netcoreapp3.0\YAB.Models.pdb
-C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\Create.cshtml.g.cs
 C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\Delete.cshtml.g.cs
 C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\Details.cshtml.g.cs
 C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\Edit.cshtml.g.cs

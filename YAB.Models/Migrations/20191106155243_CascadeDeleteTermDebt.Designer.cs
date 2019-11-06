@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YAB.Models;
 
-namespace YetAnotherBankWeb.Migrations
+namespace YAB.Migrations
 {
     [DbContext(typeof(Project1Context))]
-    partial class Project1ContextModelSnapshot : ModelSnapshot
+    [Migration("20191106155243_CascadeDeleteTermDebt")]
+    partial class CascadeDeleteTermDebt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,8 +89,10 @@ namespace YetAnotherBankWeb.Migrations
 
             modelBuilder.Entity("YAB.Models.Customers", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.HasKey("Id");
 
@@ -105,9 +109,8 @@ namespace YetAnotherBankWeb.Migrations
                     b.Property<long>("AccountId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("CustomerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
