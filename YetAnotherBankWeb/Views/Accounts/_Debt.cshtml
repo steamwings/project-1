@@ -1,9 +1,9 @@
 ﻿@model YAB.Models.DebtAccounts
 
-<div>
+@*<div>
     <h4>DebtAccounts</h4>
     <hr />
-    <dl class="row">
+    <dl class="row">*@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.PaymentAmount)
         </dt>
@@ -22,9 +22,9 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.NextPaymentDue)
         </dd>
-    </dl>
+    @*</dl>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
-</div>
+</div>*@

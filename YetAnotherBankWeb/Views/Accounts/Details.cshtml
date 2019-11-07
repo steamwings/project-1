@@ -59,20 +59,24 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Active)
         </dd>
-@if (Model.DebtAccounts.Count() > 0)
-{
-         await Html.RenderPartialAsync("_Debt", Model.DebtAccounts.First()); 
-}
-@if (Model.TermAccounts.Count() > 0)
-{
-         await Html.RenderPartialAsync("_Investment", Model.TermAccounts.First());
-}
-@*@if (Model.Business)
-{
-        @{  await Html.RenderPartialAsync("_Business", Model.CustomersToAccounts); }
-}*@
+        @if (Model.DebtAccounts.Count() > 0)
+        {
+            await Html.RenderPartialAsync("_Debt", Model.DebtAccounts.First());
+        }
+        @if (Model.TermAccounts.Count() > 0)
+        {
+            await Html.RenderPartialAsync("_Investment", Model.TermAccounts.First());
+        }
     </dl>
 </div>
+@if (Model.Type.Name == "Checking")
+{
+    await Html.RenderPartialAsync("_Checking");
+}
+@if (Model.Business)
+{
+    await Html.RenderPartialAsync("_Business", Model.CustomersToAccounts);
+}
 <div>
     <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
     <a asp-action="Index">Back to My Accounts</a>
