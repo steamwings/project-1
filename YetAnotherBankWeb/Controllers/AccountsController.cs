@@ -59,6 +59,55 @@ namespace YetAnotherBankWeb.Controllers
             return View(accounts);
         }
 
+        // TODO Move to business logic
+        private async Task<IActionResult> WithdrawDeposit(WithdrawDepositViewModel vm, bool Deposit)
+        {
+            Accounts a;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    a = _context.Accounts.Include(a => a.Type).SingleOrDefault(a => a.Id == vm.AccountId);
+                    var newBal = a.Balance + (Deposit ? vm.Amount : -vm.Amount);
+                    if (newBal < 0 && !a.Business) return RedirectToAction(nameof(Index));
+                    a.Balance = newBal;
+                    _context.Update(a);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError("Transfer failed.", e);
+                    throw e; // TODO Not this
+                }
+            }
+            return a is null ? View("Index") : View("Details", a);
+        }
+
+        // POST: Accounts/Withdraw
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Withdraw(WithdrawDepositViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                return await WithdrawDeposit(vm, false);
+            }
+            return RedirectToAction(nameof(Index)); //TODO Indicate error
+        }
+
+        // POST: Accounts/Deposit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Deposit(WithdrawDepositViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                return await WithdrawDeposit(vm, true);
+            }
+            return RedirectToAction(nameof(Index)); //TODO Indicate error
+        }
+
         // GET: Accounts/Create
         public IActionResult New()
         {
@@ -97,6 +146,7 @@ namespace YetAnotherBankWeb.Controllers
                 case "Checking":
                     break;
                 case "Investment":
+                    a.Balance = account.Amount.Value;
                     var years = _context.InterestRates.Find(account.InterestId).Years.Value;
                     a.TermAccounts.Add(new TermAccounts()
                     {
@@ -104,6 +154,7 @@ namespace YetAnotherBankWeb.Controllers
                     });
                     break;
                 case "Loan":
+                    a.Balance = -account.Amount.Value;
                     a.DebtAccounts.Add(new DebtAccounts()
                     {
                         PaymentAmount = 250.00M, //TODO Don't hardcode
@@ -156,7 +207,7 @@ namespace YetAnotherBankWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Transfer(TransferViewModel transfer)
+        public async Task<IActionResult> Transfer(TransferViewModel vm)
         {
             if (!ModelState.IsValid) return NotFound("not valid"); //return RedirectToAction(nameof(Index)); //TODO Indicate error
 
@@ -164,10 +215,17 @@ namespace YetAnotherBankWeb.Controllers
             {
                 try
                 {
-                    
-
+                    //TODO Business logic
+                    Accounts into = _context.Accounts.Find(vm.AccountToId);
+                    Accounts outof = _context.Accounts.Find(vm.AccountFromId);
+                    var newBal = outof.Balance - vm.Amount;
+                    if (vm.Amount < 0 || (newBal < 0 && !into.Business)) return RedirectToAction(nameof(Index));
+                    outof.Balance = newBal;
+                    into.Balance += vm.Amount;
+                    _context.Update(into);
+                    _context.Update(outof);
                     await _context.SaveChangesAsync();
-                    //await transaction.CommitAsync();
+                    await transaction.CommitAsync();
                 }
                 catch(Exception e)
                 {

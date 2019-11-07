@@ -7,13 +7,13 @@ function checkSubmit_New(){
     var type = document.getElementById("TypeId").value;
     switch (type) {
         case "1": // Checking
-            if(hasVal("InterestId_Checking"))
+            if (hasVal("InterestId_Checking"))
                 break;
         case "2": // Loan
             if(hasVal("LoanAmount") && hasVal("InterestId_Loan"))
                 break;
         case "3": // Investment
-            if(hasVal("InterestId_Investment"))
+            if (hasVal("TermAmount") && hasVal("InterestId_Investment"))
                 break;
         default:
             hide("divSubmit");
@@ -32,7 +32,7 @@ function checkSubmit_Tx() {
 
 
 function checkSubmit_WD() {
-    if (!hasVal("Amount") || !hasVal("selectAccount")) {
+    if (!hasVal("Amount")) {
         hide("divSubmit");
         return;
     };
@@ -78,6 +78,15 @@ function disableBtn_WD(btnModified, btnToModify) {
     document.getElementById(btnModified).disabled = true;
     document.getElementById(btnToModify).disabled = false;
     document.getElementById("divSubmit").value = btnModified;
+    if(btnModified == "btnDeposit"){
+        document.getElementById("formWD").action = "/Accounts/Deposit";
+        document.getElementById("labelAmount").innerText = "Amount to Deposit";
+        document.getElementById("btnSubmit").value = "Submit Deposit";
+    } else if(btnModified == "btnWithdraw"){
+        document.getElementById("formWD").action = "/Accounts/Withdraw";
+        document.getElementById("labelAmount").innerText = "Amount to Withdraw";
+        document.getElementById("btnSubmit").value = "Submit Withdrawal";
+    }
 }
 
 // -------------- Helper functions --------------

@@ -17,6 +17,6 @@ namespace YAB.Models
         public int InterestId { get; set; }
         [DataType(DataType.Currency)]
         [Display(Name = "Loan Sum", Prompt = "What is the size of the loan?")]
-        public decimal? LoanAmount { get; set; }
+        public decimal? Amount { get; set; }
     }
 }

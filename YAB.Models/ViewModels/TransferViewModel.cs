@@ -7,8 +7,10 @@ namespace YAB.Models
 {
     public class TransferViewModel
     {
-        public Accounts AccountOutOf { get; set; }
-        public Accounts AccountInto { get; set; }
+        [Display(Name ="Transfer from")]
+        public long AccountFromId { get; set; }
+        [Display(Name ="Transfer into")]
+        public long AccountToId { get; set; }
         [DataType(DataType.Currency)]
         [Required]
         public decimal Amount { get; set; }

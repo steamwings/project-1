@@ -4,10 +4,8 @@ namespace YAB.Models
 {
     public class WithdrawDepositViewModel
     {
-        [Required]
-        public Accounts Account { get; set; }
+        public long AccountId { get; set; }
         [DataType(DataType.Currency)]
-        [Required]
         public decimal Amount { get; set; }
     }
 }

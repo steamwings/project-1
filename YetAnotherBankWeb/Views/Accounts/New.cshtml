@@ -38,23 +38,25 @@
             </div>
 
             <div id="divTerm" style="display:none" class="form-group">
-                @*<label class="control-label" asp-for="TermYears"></label>
-                    <input class="form-control" asp-for="TermYears" />
-                    <span asp-validation-for="TermYears" class="text-danger"></span>*@
                 <label asp-for="InterestId" class="control-label"></label>
                 <select id="InterestId_Investment" asp-for="InterestId" class="form-control" asp-items="ViewBag.InterestId_Investment">
                     <option disabled selected value=""> -- select interest rate -- </option>
                 </select>
+                <label class="control-label" asp-for="Amount"></label>
+                <input id="TermAmount" class="form-control" asp-for="Amount" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
             <div id="divLoan" style="display:none" class="form-group">
-                <label class="control-label" asp-for="LoanAmount"></label>
-                <input class="form-control" asp-for="LoanAmount" />
-                <span asp-validation-for="LoanAmount" class="text-danger"></span>
                 <div>
                     <label asp-for="InterestId" class="control-label"></label>
                     <select id="InterestId_Loan" asp-for="InterestId" class="form-control" asp-items="ViewBag.InterestId_Loan">
                         <option disabled selected value=""> -- select interest rate -- </option>
                     </select>
+                </div>
+                <div>
+                    <label class="control-label" asp-for="Amount"></label>
+                    <input id="LoanAmount" class="form-control" asp-for="Amount" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
                 </div>
             </div>
             <div id="divSubmit" style="display:none" class="form-group">
