@@ -1,32 +1,4 @@
 
-function updateFromType_New(){
-    // document.getElementById("InterestId_Checking").value = "";
-    // document.getElementById("InterestId_Investment").value = "";
-    // document.getElementById("InterestId_Loan").value = "";
-    var type = document.getElementById("TypeId").value;
-    switch(type){
-        case "2": // Loan
-            show("divLoan");
-            hide("divTerm");
-            hide("divChecking");
-            break;
-        case "3": // Investment
-            hide("divLoan");
-            show("divTerm");
-            hide("divChecking");
-            break;
-        case "1": // Checking
-            hide("divLoan");
-            hide("divTerm");
-            show("divChecking");
-            break;
-        default:
-            hide("divLoan");
-            hide("divTerm");
-            hide("divChecking");
-    }
-}
-
 function checkSubmit_New(){
     if(!hasVal("Name")){
         hide("divSubmit");
@@ -58,18 +30,54 @@ function checkSubmit_Tx() {
     show("divSubmit");
 }
 
+
+function checkSubmit_WD() {
+    if (!hasVal("Amount") || !hasVal("selectAccount")) {
+        hide("divSubmit");
+        return;
+    };
+    show("divSubmit");
+}
+
+function updateFromType_New() {
+    // document.getElementById("InterestId_Checking").value = "";
+    // document.getElementById("InterestId_Investment").value = "";
+    // document.getElementById("InterestId_Loan").value = "";
+    var type = document.getElementById("TypeId").value;
+    switch (type) {
+        case "2": // Loan
+            show("divLoan");
+            hide("divTerm");
+            hide("divChecking");
+            break;
+        case "3": // Investment
+            hide("divLoan");
+            show("divTerm");
+            hide("divChecking");
+            break;
+        case "1": // Checking
+            hide("divLoan");
+            hide("divTerm");
+            show("divChecking");
+            break;
+        default:
+            hide("divLoan");
+            hide("divTerm");
+            hide("divChecking");
+    }
+}
+
 function disableOption_Tx(selectModified, selectToModify){
     var val = selectedVal(selectModified);
     if(val == document.getElementById(selectToModify).value)
         document.getElementById(selectToModify).value = "";
+}
 
-    // var op = document.getElementById(selectToModify).getElementsByTagName("option");
-
-    // for (var i = 0; i < op.length; i++) {
-    //     (op[i].value == val)
-    //         ? op[i].disabled = true
-    //         : op[i].disabled = false;
-    // }
+function disableBtn_WD(btnModified, btnToModify) {
+    show("divWDForm");
+    document.getElementById(btnModified).disabled = true;
+    document.getElementById(btnToModify).disabled = false;
+    document.getElementById("divSubmit").value = btnModified;
 }
 
 // -------------- Helper functions --------------

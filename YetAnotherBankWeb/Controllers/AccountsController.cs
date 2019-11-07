@@ -54,6 +54,7 @@ namespace YetAnotherBankWeb.Controllers
             {
                 return NotFound();
             }
+            ViewData["Accounts"] = new SelectList(await _repo.GetAll(UID()), "Id", "Name");
 
             return View(accounts);
         }
