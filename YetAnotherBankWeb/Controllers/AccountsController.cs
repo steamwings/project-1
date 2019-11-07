@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using YAB.Models;
 using YAB.Models.Repos;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using YetAnotherBankWeb.Areas.Identity.Data;
 
@@ -39,7 +38,7 @@ namespace YetAnotherBankWeb.Controllers
         // GET: Accounts
         public async Task<IActionResult> Index()
         {
-            return View(await _repo.GetQueryable(UID()).ToListAsync());
+            return View(await _repo.GetAll(UID()));
         }
 
         // GET: Accounts/Details/5
@@ -50,9 +49,7 @@ namespace YetAnotherBankWeb.Controllers
                 return NotFound();
             }
 
-            var accounts = await _context.Accounts
-                .Include(a => a.Interest)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var accounts = await _repo.Get(UID(), id.Value);
             if (accounts == null)
             {
                 return NotFound();
@@ -72,8 +69,6 @@ namespace YetAnotherBankWeb.Controllers
         }
 
         // POST: Accounts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(NewAccountViewModel account)
@@ -104,7 +99,7 @@ namespace YetAnotherBankWeb.Controllers
                     var years = _context.InterestRates.Find(account.InterestId).Years.Value;
                     a.TermAccounts.Add(new TermAccounts()
                     {
-                        MaturationDate = DateTime.Now.AddYears(years)
+                        MaturationDate = DateTime.Now.AddYears(years),
                     });
                     break;
                 case "Loan":
@@ -140,13 +135,49 @@ namespace YetAnotherBankWeb.Controllers
                 catch(Exception e)
                 {
                     _logger.LogError("Create account failed.",e);
-                    throw e;
+                    throw e; // Not this
                 }
             }
             return RedirectToAction(nameof(Index)); //View("Details", account);
         }
 
-        // GET: Accounts/Edit/5
+        // GET: Accounts/Transfer
+        public async Task<IActionResult> Transfer()
+        {
+            if(await _repo.Count(UID()) < 2) //TODO Notify user of what's wrong
+                return RedirectToAction(nameof(Index));
+            ViewData["Accounts"] = new SelectList(await _repo.GetAll(UID()), "Id", "Name");
+            return View();
+        }
+
+        // POST: Accounts/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Transfer(TransferViewModel transfer)
+        {
+            if (!ModelState.IsValid) return NotFound("not valid"); //return RedirectToAction(nameof(Index)); //TODO Indicate error
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    
+
+                    await _context.SaveChangesAsync();
+                    //await transaction.CommitAsync();
+                }
+                catch(Exception e)
+                {
+                    _logger.LogError("Transfer failed.", e);
+                    throw e; // TODO Not this
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+            // GET: Accounts/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -184,7 +215,7 @@ namespace YetAnotherBankWeb.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AccountsExists(accounts.Id))
+                    if (!_repo.Exists(UID(),accounts.Id))
                     {
                         return NotFound();
                     }
@@ -227,11 +258,6 @@ namespace YetAnotherBankWeb.Controllers
             _context.Accounts.Remove(accounts);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool AccountsExists(long id)
-        {
-            return _context.Accounts.Any(e => e.Id == id);
         }
     }
 }

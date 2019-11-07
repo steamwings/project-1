@@ -1,19 +1,5 @@
 
-function show(id){
-    // alert("Hello!");
-    document.getElementById(id).style.display = "block";
-}
-function hide(id){
-    document.getElementById(id).style.display = "none";
-}
-function hasVal(id){
-    var v = document.getElementById(id).value;
-    return !(v === undefined || v === "");
-}
-
-function hello(){alert("Hello!");}
-
-function updateFromType(){
+function updateFromType_New(){
     // document.getElementById("InterestId_Checking").value = "";
     // document.getElementById("InterestId_Investment").value = "";
     // document.getElementById("InterestId_Loan").value = "";
@@ -41,7 +27,7 @@ function updateFromType(){
     }
 }
 
-function checkShowSubmit(){
+function checkSubmit_New(){
     if(!hasVal("Name")){
         hide("divSubmit");
         return;
@@ -62,4 +48,50 @@ function checkShowSubmit(){
             return;
     }
     show("divSubmit");
+}
+
+function checkSubmit_Tx() {
+    if (!hasVal("Amount") || !hasVal("selectInto") || !hasVal("selectOutOf") ) {
+        hide("divSubmit");
+        return;
+    };
+    show("divSubmit");
+}
+
+function disableOption_Tx(selectModified, selectToModify){
+    var val = selectedVal(selectModified);
+    if(val == document.getElementById(selectToModify).value)
+        document.getElementById(selectToModify).value = "";
+
+    // var op = document.getElementById(selectToModify).getElementsByTagName("option");
+
+    // for (var i = 0; i < op.length; i++) {
+    //     (op[i].value == val)
+    //         ? op[i].disabled = true
+    //         : op[i].disabled = false;
+    // }
+}
+
+// -------------- Helper functions --------------
+
+function selectedVal(selectName){
+    var op = document.getElementById(selectName).getElementsByTagName("option");
+    for (var i = 0; i < op.length; i++) {
+        if(op[i].selected)
+            return op[i].value;
+    }
+}
+
+function hello() { alert("Hello!"); }
+
+function show(id) {
+    // alert("Hello!");
+    document.getElementById(id).style.display = "block";
+}
+function hide(id) {
+    document.getElementById(id).style.display = "none";
+}
+function hasVal(id) {
+    var v = document.getElementById(id).value;
+    return !(v === undefined || v === "");
 }

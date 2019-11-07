@@ -177,10 +177,16 @@ C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Shared\_Lo
 C:\git\Project1\YetAnotherBankWeb\bin\Debug\netcoreapp3.0\YAB.Models.dll
 C:\git\Project1\YetAnotherBankWeb\bin\Debug\netcoreapp3.0\YAB.Models.pdb
 C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\Delete.cshtml.g.cs
-C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\Details.cshtml.g.cs
 C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\Edit.cshtml.g.cs
 C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\Index.cshtml.g.cs
 C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Shared\_Layout.cshtml.g.cs
 C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\New.cshtml.g.cs
 C:\git\Project1\YetAnotherBankWeb\bin\Debug\netcoreapp3.0\YAB.BusinessLayer.dll
 C:\git\Project1\YetAnotherBankWeb\bin\Debug\netcoreapp3.0\YAB.BusinessLayer.pdb
+C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Shared\DisplayTemplates\_BoolAccount.cshtml.g.cs
+C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Shared\DisplayTemplates\_BoolBusiness.cshtml.g.cs
+C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\Transfer.cshtml.g.cs
+C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\Details.cshtml.g.cs
+C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\_Investment.cshtml.g.cs
+C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\_Debt.cshtml.g.cs
+C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\_Business.cshtml.g.cs

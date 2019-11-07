@@ -1,0 +1,39 @@
+﻿@model YAB.Models.TransferViewModel
+@{
+    ViewData["Title"] = "Transfer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <script src="~/js/account.js"></script>
+
+<h1>Transfer</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Transfer" onload="location.reload();" onchange="checkSubmit_Tx();">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="AccountOutOf" class="control-label"></label>
+                <select id="selectOutOf" onchange="disableOption_Tx('selectOutOf','selectInto');" asp-for="AccountOutOf" class="form-control" asp-items="ViewBag.Accounts">
+                    <option disabled selected value=""> -- select account to transfer out of -- </option>
+                </select>
+            </div>
+            <div id="divInto" class="form-group">
+                <label asp-for="AccountInto" class="control-label"></label>
+                <select id="selectInto" onchange="disableOption_Tx('selectInto','selectOutOf');" asp-for="AccountInto" class="form-control" asp-items="ViewBag.Accounts">
+                    <option disabled selected value=""> -- select account to transfer into -- </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div id="divSubmit" style="display:none" class="form-group">
+                <input type="submit" value="Transfer" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+

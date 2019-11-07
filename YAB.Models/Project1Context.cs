@@ -15,7 +15,6 @@ namespace YAB.Models
             : base(options)
         {
         }
-
         public virtual DbSet<Accounts> Accounts { get; set; }
         public virtual DbSet<Customers> Customers { get; set; }
         public virtual DbSet<CustomersToAccounts> CustomersToAccounts { get; set; }

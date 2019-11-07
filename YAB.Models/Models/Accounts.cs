@@ -29,10 +29,15 @@ namespace YAB.Models
         public DateTime Created { get; set; }
         [Required]
         [DataType(DataType.DateTime)]
+        [Display(Name="Last Update")]
         public DateTime LastUpdated { get; set; }
         [Required]
+        [UIHint("_BoolAccount")]
+        [Display(Name="Status")]
         public bool Active { get; set; }
         [Required]
+        [Display(Name="Use")]
+        [UIHint("_BoolBusiness")]
         public bool Business { get; set; }
 
         public virtual InterestRates Interest { get; set; }

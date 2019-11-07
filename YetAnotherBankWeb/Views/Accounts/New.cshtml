@@ -12,7 +12,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" onload="location.reload();" onchange="checkShowSubmit();">
+        <form asp-action="Create" onload="location.reload();" onchange="checkSubmit_New();">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -26,7 +26,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="TypeId" class="control-label"></label>
-                <select onchange="updateFromType();" asp-for="TypeId" class="form-control" asp-items="ViewBag.AccountTypeId">
+                <select onchange="updateFromType_New();" asp-for="TypeId" class="form-control" asp-items="ViewBag.AccountTypeId">
                     <option disabled selected value=""> -- select account type -- </option>
                 </select>
             </div>
