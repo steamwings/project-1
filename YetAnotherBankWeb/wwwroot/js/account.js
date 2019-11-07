@@ -10,10 +10,10 @@ function checkSubmit_New(){
             if (hasVal("InterestId_Checking"))
                 break;
         case "2": // Loan
-            if(hasVal("LoanAmount") && hasVal("InterestId_Loan"))
+            if(hasVal("Amount") && hasVal("InterestId_Loan"))
                 break;
         case "3": // Investment
-            if (hasVal("TermAmount") && hasVal("InterestId_Investment"))
+            if (hasVal("Amount") && hasVal("InterestId_Investment"))
                 break;
         default:
             hide("divSubmit");
@@ -40,30 +40,36 @@ function checkSubmit_WD() {
 }
 
 function updateFromType_New() {
-    // document.getElementById("InterestId_Checking").value = "";
-    // document.getElementById("InterestId_Investment").value = "";
-    // document.getElementById("InterestId_Loan").value = "";
     var type = document.getElementById("TypeId").value;
     switch (type) {
-        case "2": // Loan
-            show("divLoan");
-            hide("divTerm");
-            hide("divChecking");
-            break;
-        case "3": // Investment
-            hide("divLoan");
-            show("divTerm");
-            hide("divChecking");
-            break;
         case "1": // Checking
+            hide("divAmount");
             hide("divLoan");
             hide("divTerm");
             show("divChecking");
             break;
+        case "2": // Loan
+            show("divAmount");
+            show("divLoan");
+            hide("divTerm");
+            hide("divChecking");
+            document.getElementById("labelAmount").innerHTML = "Loan Amount";
+            document.getElementById("Amount").placeholder = "What is the size of the loan?";
+            break;
+        case "3": // Investment
+            show("divAmount");
+            hide("divLoan");
+            show("divTerm");
+            hide("divChecking");
+            document.getElementById("labelAmount").innerHTML = "Term Deposit Amount";
+            document.getElementById("Amount").placeholder = "How much would you like to invest?";
+            break;
         default:
+            hide("divAmount");
             hide("divLoan");
             hide("divTerm");
             hide("divChecking");
+            break;
     }
 }
 
