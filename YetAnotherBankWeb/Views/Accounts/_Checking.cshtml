@@ -16,13 +16,13 @@
         <input type="button" value="Withdrawal" id="btnWithdraw" class="btn btn-primary" onclick="disableBtn_WD('btnWithdraw', 'btnDeposit');" />
     </span>
     <div style="display:none" id="divWDForm">
-        <form id="formWD" asp-action="Deposit" onchange="checkSubmit_WD();">
+        <form id="formWD" asp-action="Deposit" onchange="checkSubmit_WD();" oncreate="disableEnter();">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @if (Model != null && Model.AccountId == 0)
             {
                 <div class="form-group">
                     <label id="labelSelectAccount" class="control-label"></label>
-                    <select id="selectAccount" asp-for="AccountId" class="form-control" asp-items="ViewBag.AccountIds">
+                    <select id="selectAccount" asp-for="AccountId" class="form-control" asp-items="ViewBag.Accounts">
                         <option disabled selected value=""> -- select account -- </option>
                     </select>
                 </div>

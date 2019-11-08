@@ -18,4 +18,6 @@ namespace YAB.Models.Repos
     {
         public Task<List<Accounts>> GetAll(string userId);
     }
+
+    public interface ITransactionsRepo { }
 }

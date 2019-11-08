@@ -55,6 +55,18 @@ namespace YAB.Models
                     .HasForeignKey(d => d.InterestId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Accounts_InterestRates");
+
+                entity.HasMany(a => a.TermAccounts)
+                    .WithOne(t => t.Account)
+                    .HasForeignKey(a => a.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Accounts_TermAccounts");
+
+                entity.HasMany(a => a.DebtAccounts)
+                    .WithOne(t => t.Account)
+                    .HasForeignKey(a => a.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Accounts_DebtAccounts");
             });
 
             //modelBuilder.Entity<Customers>(entity =>

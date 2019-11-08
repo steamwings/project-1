@@ -11,8 +11,9 @@ namespace YAB.Models
         public long AccountFromId { get; set; }
         [Display(Name ="Transfer into")]
         public long AccountToId { get; set; }
-        [DataType(DataType.Currency)]
         [Required]
+        [DataType(DataType.Currency)]
+        [RegularExpression(@"^\d*[^0\D]\d*(\.\d{2})?$|^\d*\.(\d[^0\D]|[^0\D]\d)$", ErrorMessage = "Must be positive dollar amount.")]
         public decimal Amount { get; set; }
     }
 }

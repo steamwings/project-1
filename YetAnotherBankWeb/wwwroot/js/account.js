@@ -1,3 +1,5 @@
+var lastFormAction = "";
+var lastFormName = "";
 
 function checkSubmit_New(){
     if(!hasVal("Name")){
@@ -16,27 +18,33 @@ function checkSubmit_New(){
             if (hasVal("Amount") && hasVal("InterestId_Investment"))
                 break;
         default:
+            disableForm();
             hide("divSubmit");
             return;
     }
     show("divSubmit");
+    enableForm();
 }
 
 function checkSubmit_Tx() {
     if (!hasVal("Amount") || !hasVal("selectInto") || !hasVal("selectOutOf") ) {
         hide("divSubmit");
+        disableForm();
         return;
     };
     show("divSubmit");
+    enableForm();
 }
 
 
 function checkSubmit_WD() {
     if (!hasVal("Amount")) {
         hide("divSubmit");
+        disableForm();
         return;
     };
     show("divSubmit");
+    enableForm();
 }
 
 function updateFromType_New() {
@@ -117,4 +125,14 @@ function hide(id) {
 function hasVal(id) {
     var v = document.getElementById(id).value;
     return !(v === undefined || v === "");
+}
+
+function enableForm(){
+    document.getElementById(lastFormName).action = lastFormAction;
+}
+
+function disableForm(form=lastFormName){
+    lastFormName = form;
+    lastFormAction = document.getElementById(form).action;
+    document.getElementById(form).action = "javascript:void(0);";
 }

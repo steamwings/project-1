@@ -78,3 +78,6 @@ tr:nth-child(odd) td {
     background-color: #ddecfb
 }
 
+.action-list {
+    margin-bottom: 10px
+}

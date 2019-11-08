@@ -33,6 +33,8 @@ namespace YAB.Models.Repos
                 .Include(a => a.Type)
                 .Include(a => a.IncomingTransactions)
                 .Include(a => a.OutgoingTransactions)
+                .Include(a => a.DebtAccounts)
+                .Include(a => a.TermAccounts)
                 .FirstOrDefaultAsync();
             //return UserAccounts(userId).Where(a => a.Id == accId).FirstOrDefaultAsync();
         }

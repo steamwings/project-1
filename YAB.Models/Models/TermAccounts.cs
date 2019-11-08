@@ -9,6 +9,7 @@ namespace YAB.Models
         [Required]
         public long AccountId { get; set; }
         [Required]
+        [Display(Name ="Matures on")]
         public DateTime MaturationDate { get; set; }
 
         public virtual Accounts Account { get; set; }

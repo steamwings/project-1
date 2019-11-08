@@ -8,5 +8,6 @@ namespace YAB.Models
     {
         public Accounts Accounts { get; set; }
         public IEnumerable<TransactionsViewModel> TransactionsVMs { get; set; }
+        public WithdrawDepositViewModel WDViewModel { get; set; }
     }
 }

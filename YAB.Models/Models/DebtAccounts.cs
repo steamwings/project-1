@@ -10,9 +10,12 @@ namespace YAB.Models
         [Required]
         public long AccountId { get; set; }
         [Required]
+        [Display(Name ="Payment Amount")]
         public decimal PaymentAmount { get; set; }
         [Required]
+        [Display(Name="Payments Owed")]
         public int PaymentsBehind { get; set; }
+        [Display(Name = "Next Payment Due")]
         public DateTime NextPaymentDue { get; set; }
         public virtual Accounts Account { get; set; }
     }

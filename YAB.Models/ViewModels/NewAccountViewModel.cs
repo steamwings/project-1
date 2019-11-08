@@ -17,6 +17,7 @@ namespace YAB.Models
         public int InterestId { get; set; }
         [DataType(DataType.Currency)]
         [Display(Name = "Loan Sum", Prompt = "What is the size of the loan?")]
+        [RegularExpression(@"^\d*[^0\D]\d*(\.\d{2})?$|^\d*\.(\d[^0\D]|[^0\D]\d)$", ErrorMessage = "Must be positive dollar amount.")]
         public decimal? Amount { get; set; }
     }
 }

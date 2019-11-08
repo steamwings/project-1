@@ -5,77 +5,65 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <h1>Your Account: @ViewData["Title"]</h1>
+<h1>Your Account: @ViewData["Title"]</h1>
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-4">
             <div>
                 <h4>Details</h4>
                 <hr />
             </div>
             <div>
-                <a asp-action="Index">Back to My Accounts</a> |
-                <a asp-action="Delete" asp-route-id="@Model.Accounts.Id">Delete</a>
-            </div>
-            <div>
                 <dl class="row">
-                    <dt class="col-sm-2">
+                    <dt class="col-sm-4">
                         @Html.DisplayNameFor(model => model.Accounts.Name)
                     </dt>
-                    <dd class="col-sm-10">
+                    <dd class="col-sm-8">
                         @Html.DisplayFor(model => model.Accounts.Name)
                     </dd>
-                    <dt class="col-sm-2">
+                    <dt class="col-sm-4">
                         @Html.DisplayNameFor(model => model.Accounts.Balance)
                     </dt>
-                    <dd class="col-sm-10">
+                    <dd class="col-sm-8">
                         @Html.DisplayFor(model => model.Accounts.Balance)
                     </dd>
-                    <dt class="col-sm-2">
+                    <dt class="col-sm-4">
                         @Html.DisplayNameFor(model => model.Accounts.Type)
                     </dt>
-                    <dd class="col-sm-10">
+                    <dd class="col-sm-8">
                         @Html.DisplayFor(model => model.Accounts.Type.Name)
                     </dd>
-                    <dt class="col-sm-2">
+                    <dt class="col-sm-4">
                         @Html.DisplayNameFor(model => model.Accounts.Business)
                     </dt>
-                    <dd class="col-sm-10">
+                    <dd class="col-sm-8">
                         @Html.DisplayFor(model => model.Accounts.Business)
                     </dd>
-                    <dt class="col-sm-2">
+                    <dt class="col-sm-4">
                         @Html.DisplayNameFor(model => model.Accounts.Interest)
                     </dt>
-                    <dd class="col-sm-10">
+                    <dd class="col-sm-8">
                         @Html.DisplayFor(model => model.Accounts.Interest.Name)
                     </dd>
-                    <dt class="col-sm-2">
+                    <dt class="col-sm-4">
                         @Html.DisplayNameFor(model => model.Accounts.Created)
                     </dt>
-                    <dd class="col-sm-10">
+                    <dd class="col-sm-8">
                         @Html.DisplayFor(model => model.Accounts.Created)
                     </dd>
-                    <dt class="col-sm-2">
+                    <dt class="col-sm-4">
                         @Html.DisplayNameFor(model => model.Accounts.LastUpdated)
                     </dt>
-                    <dd class="col-sm-10">
+                    <dd class="col-sm-8">
                         @Html.DisplayFor(model => model.Accounts.LastUpdated)
                     </dd>
-                    <dt class="col-sm-2">
+                    <dt class="col-sm-4">
                         @Html.DisplayNameFor(model => model.Accounts.Active)
                     </dt>
-                    <dd class="col-sm-10">
+                    <dd class="col-sm-8">
                         @Html.DisplayFor(model => model.Accounts.Active)
                     </dd>
-                    @if (Model.Accounts.DebtAccounts.Count() > 0)
-                    {
-                        await Html.RenderPartialAsync("_Debt", Model.Accounts.DebtAccounts.First());
-                    }
-                    @if (Model.Accounts.TermAccounts.Count() > 0)
-                    {
-                        await Html.RenderPartialAsync("_Investment", Model.Accounts.TermAccounts.First());
-                    }
                 </dl>
             </div>
             @if (Model.Accounts.Business)
@@ -83,18 +71,34 @@
                 await Html.RenderPartialAsync("_Business", Model.Accounts.CustomersToAccounts);
             }
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-8">
             @if (Model.Accounts.Type.Name == "Checking")
             {
-                await Html.RenderPartialAsync("_Checking", new YAB.Models.WithdrawDepositViewModel() { AccountId = Model.Accounts.Id});
+                await Html.RenderPartialAsync("_Checking", new YAB.Models.WithdrawDepositViewModel() {AccountId = Model.Accounts.Id });
+            }
+            @if (Model.Accounts.DebtAccounts.Count() > 0)
+            {
+                await Html.RenderPartialAsync("_Debt", Model.Accounts.DebtAccounts.First());
+            }
+            @if (Model.Accounts.TermAccounts.Count() > 0)
+            {
+                await Html.RenderPartialAsync("_Investment", Model.Accounts.TermAccounts.First());
             }
         </div>
     </div> <!-- end single row -->
 </div>
 
+<hr />
+<h4> Transactions </h4>
+
 @if (Model != null && Model.TransactionsVMs != null)
 {
-<div>
-    @{await Html.RenderPartialAsync("_Transactions", Model.TransactionsVMs);}
-</div>
+    <div>
+        @{await Html.RenderPartialAsync("_Transactions", Model.TransactionsVMs);}
+    </div>
 }
+
+<div class="action-list">
+    <a asp-action="Index">Back to My Accounts</a> |
+    <a asp-action="Delete" asp-route-id="@Model.Accounts.Id">Delete</a>
+</div>
