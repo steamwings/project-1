@@ -191,3 +191,4 @@ C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\_
 C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\_Debt.cshtml.g.cs
 C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\_Business.cshtml.g.cs
 C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\_Checking.cshtml.g.cs
+C:\git\Project1\YetAnotherBankWeb\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\_Transactions.cshtml.g.cs

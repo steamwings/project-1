@@ -29,7 +29,7 @@ namespace YAB.Models
         public DateTime Created { get; set; }
         [Required]
         [DataType(DataType.DateTime)]
-        [Display(Name="Last Update")]
+        [Display(Name="Updated")]
         public DateTime LastUpdated { get; set; }
         [Required]
         [UIHint("_BoolAccount")]

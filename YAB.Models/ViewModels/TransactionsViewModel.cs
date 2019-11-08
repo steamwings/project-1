@@ -6,7 +6,10 @@ namespace YAB.Models
 {
     public class TransactionsViewModel
     {
-        public ICollection<Transactions> InTx { get; set; }
-        public ICollection<Transactions> OutTx { get; set; }
+        public DateTime Timestamp { get; set; }
+        public decimal Amount { get; set; }
+        public string TypeName { get; set; }
+        public string Source { get; set; }
+        public string Destination { get; set; }
     }
 }

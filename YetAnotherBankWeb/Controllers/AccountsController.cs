@@ -41,6 +41,34 @@ namespace YetAnotherBankWeb.Controllers
             return View(await _repo.GetAll(UID()));
         }
 
+        //TODO move some of this to BL?
+        private TransactionsViewModel TVM(Transactions t, string accName)
+        {
+            Func<Accounts, string> formatAcc = a => (a is null || a.Name is null || a.Name == accName) ? "--" : a.Name;
+            return new TransactionsViewModel()
+            {
+                Timestamp = t.Timestamp,
+                Amount = t.Amount ?? 0,
+                TypeName = _context.TransactionTypes.Find(t.TypeId).Name ?? "Unknown",
+                Source = formatAcc(t.FromAccount),
+                Destination = formatAcc(t.ToAccount)
+            };
+        }
+
+        private DetailsAccountViewModel CreateDetailsVM(Accounts a)
+        {
+            var davm = new DetailsAccountViewModel
+            {
+                Accounts = a
+            };
+            List<TransactionsViewModel> list = new List<TransactionsViewModel>();
+            list.AddRange(a.OutgoingTransactions.AsQueryable().Select(t => TVM(t, a.Name)));
+            list.AddRange(a.IncomingTransactions.AsQueryable().Select(t => TVM(t, a.Name)));
+            davm.TransactionsVMs = list.OrderBy(t => t.Timestamp);
+            return davm;
+        }
+        
+
         // GET: Accounts/Details/5
         public async Task<IActionResult> Details(long? id)
         {
@@ -56,7 +84,8 @@ namespace YetAnotherBankWeb.Controllers
             }
             ViewData["Accounts"] = new SelectList(await _repo.GetAll(UID()), "Id", "Name");
 
-            return View(accounts);
+            
+            return View(CreateDetailsVM(accounts));
         }
 
         // TODO Move to business logic
@@ -71,6 +100,17 @@ namespace YetAnotherBankWeb.Controllers
                     var newBal = a.Balance + (Deposit ? vm.Amount : -vm.Amount);
                     if (newBal < 0 && !a.Business) return RedirectToAction(nameof(Index));
                     a.Balance = newBal;
+                    // TODO Transaction repo
+                    var ttid = _context.TransactionTypes
+                        .Where(y => y.Name == (Deposit ? "Deposit" : "Withdrawal")).Single().Id;
+                    _context.Transactions.Add(new Transactions
+                    {
+                        Timestamp = DateTime.Now,
+                        TypeId = ttid,
+                        Amount = vm.Amount,
+                        FromAccountId = null,
+                        ToAccountId = vm.AccountId
+                    });
                     _context.Update(a);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
@@ -81,7 +121,8 @@ namespace YetAnotherBankWeb.Controllers
                     throw e; // TODO Not this
                 }
             }
-            return a is null ? View("Index") : View("Details", a);
+            if (a is null) return View("Index");
+            else return RedirectToAction(nameof(Details),new { a.Id });
         }
 
         // POST: Accounts/Withdraw
@@ -222,6 +263,16 @@ namespace YetAnotherBankWeb.Controllers
                     if (vm.Amount < 0 || (newBal < 0 && !into.Business)) return RedirectToAction(nameof(Index));
                     outof.Balance = newBal;
                     into.Balance += vm.Amount;
+                    // TODO Transaction repo
+                    var ttid = _context.TransactionTypes.Where(y => y.Name == "Transfer").Single().Id;
+                    _context.Transactions.Add(new Transactions
+                    {
+                        Timestamp = DateTime.Now,
+                        TypeId = ttid,
+                        Amount = vm.Amount,
+                        FromAccountId = vm.AccountFromId,
+                        ToAccountId = vm.AccountToId
+                    }) ;
                     _context.Update(into);
                     _context.Update(outof);
                     await _context.SaveChangesAsync();
