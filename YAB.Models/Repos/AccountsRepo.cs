@@ -28,7 +28,12 @@ namespace YAB.Models.Repos
 
         public Task<Accounts> Get(string userId, long accId)
         {
-            return _context.Accounts.Intersect(UserAccounts(userId)).Where(a => a.Id == accId).Include(a => a.Interest).Include(a => a.Type).FirstOrDefaultAsync();
+            return _context.Accounts.Intersect(UserAccounts(userId)).Where(a => a.Id == accId)
+                .Include(a => a.Interest)
+                .Include(a => a.Type)
+                .Include(a => a.IncomingTransactions)
+                .Include(a => a.OutgoingTransactions)
+                .FirstOrDefaultAsync();
             //return UserAccounts(userId).Where(a => a.Id == accId).FirstOrDefaultAsync();
         }
         public Task<List<Accounts>> GetAll(string userId)

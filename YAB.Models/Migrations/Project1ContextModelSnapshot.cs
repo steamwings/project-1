@@ -194,6 +194,54 @@ namespace YetAnotherBankWeb.Migrations
                     b.ToTable("TermAccounts");
                 });
 
+            modelBuilder.Entity("YAB.Models.TransactionType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TransactionTypes");
+                });
+
+            modelBuilder.Entity("YAB.Models.Transactions", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<long?>("FromAccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("ToAccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromAccountId");
+
+                    b.HasIndex("ToAccountId");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("YAB.Models.Accounts", b =>
                 {
                     b.HasOne("YAB.Models.InterestRates", "Interest")
@@ -252,6 +300,26 @@ namespace YetAnotherBankWeb.Migrations
                         .HasForeignKey("AccountId")
                         .HasConstraintName("FK_TermAccounts_Accounts")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("YAB.Models.Transactions", b =>
+                {
+                    b.HasOne("YAB.Models.Accounts", "FromAccount")
+                        .WithMany("OutgoingTransactions")
+                        .HasForeignKey("FromAccountId")
+                        .HasConstraintName("FK_Transactions_FromAccounts");
+
+                    b.HasOne("YAB.Models.Accounts", "ToAccount")
+                        .WithMany("IncomingTransactions")
+                        .HasForeignKey("ToAccountId")
+                        .HasConstraintName("FK_Transactions_ToAccounts");
+
+                    b.HasOne("YAB.Models.TransactionType", "Type")
+                        .WithMany("Transactions")
+                        .HasForeignKey("TypeId")
+                        .HasConstraintName("FK_Transactions_TransactionType")
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

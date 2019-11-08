@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 
 namespace YAB.Models
@@ -22,6 +23,8 @@ namespace YAB.Models
         public virtual DbSet<InterestRates> InterestRates { get; set; }
         public virtual DbSet<TermAccounts> TermAccounts { get; set; }
         public virtual DbSet<AccountTypes> AccountTypes { get; set; }
+        public virtual DbSet<Transactions> Transactions { get; set; }
+        public virtual DbSet<TransactionType> TransactionTypes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -121,6 +124,29 @@ namespace YAB.Models
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_TermAccounts_Accounts");
             });
+
+            modelBuilder.Entity<Transactions>(entity =>
+            {
+                entity.HasOne(t => t.FromAccount)
+                    .WithMany(a => a.OutgoingTransactions)
+                    .HasForeignKey(a => a.FromAccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Transactions_FromAccounts");
+
+                entity.HasOne(t => t.ToAccount)
+                    .WithMany(a => a.IncomingTransactions)
+                    .HasForeignKey(a => a.ToAccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Transactions_ToAccounts");
+
+                entity.HasOne(t => t.Type)
+                    .WithMany(p => p.Transactions)
+                    .HasForeignKey(t => t.TypeId)
+                    .OnDelete(DeleteBehavior.ClientCascade)
+                    .HasConstraintName("FK_Transactions_TransactionType");
+
+            });
+
 
             OnModelCreatingPartial(modelBuilder);
         }

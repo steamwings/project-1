@@ -67,7 +67,7 @@ namespace YetAnotherBankWeb.Controllers
             {
                 try
                 {
-                    a = _context.Accounts.Include(a => a.Type).SingleOrDefault(a => a.Id == vm.AccountId);
+                    a = await _repo.Get(UID(), vm.AccountId);
                     var newBal = a.Balance + (Deposit ? vm.Amount : -vm.Amount);
                     if (newBal < 0 && !a.Business) return RedirectToAction(nameof(Index));
                     a.Balance = newBal;

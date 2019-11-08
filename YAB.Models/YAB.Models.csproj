@@ -27,6 +27,18 @@
     <Compile Remove="Migrations\20191106194635_CustomerTemp2.Designer.cs" />
     <Compile Remove="Migrations\20191106194707_CustomerTemp3.cs" />
     <Compile Remove="Migrations\20191106194707_CustomerTemp3.Designer.cs" />
+    <Compile Remove="Migrations\20191108031555_tmp.cs" />
+    <Compile Remove="Migrations\20191108031555_tmp.Designer.cs" />
+    <Compile Remove="Migrations\20191108035604_AddTransactions.cs" />
+    <Compile Remove="Migrations\20191108035604_AddTransactions.Designer.cs" />
+    <Compile Remove="Migrations\20191108040021_AddTransactions.cs" />
+    <Compile Remove="Migrations\20191108040021_AddTransactions.Designer.cs" />
+    <Compile Remove="Migrations\20191108040256_AddTransactions.cs" />
+    <Compile Remove="Migrations\20191108040256_AddTransactions.Designer.cs" />
+    <Compile Remove="Migrations\20191108040518_AddTransactions.cs" />
+    <Compile Remove="Migrations\20191108040518_AddTransactions.Designer.cs" />
+    <Compile Remove="Migrations\20191108040946_AddTransactions.cs" />
+    <Compile Remove="Migrations\20191108040946_AddTransactions.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

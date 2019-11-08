@@ -45,5 +45,8 @@ namespace YAB.Models
         // 0 <= *total debt+term accts* <= 1
         public virtual ICollection<DebtAccounts> DebtAccounts { get; set; }
         public virtual ICollection<TermAccounts> TermAccounts { get; set; }
+
+        public virtual ICollection<Transactions> IncomingTransactions { get; set; }
+        public virtual ICollection<Transactions> OutgoingTransactions { get; set; }
     }
 }
