@@ -78,7 +78,12 @@
             }
             @if (Model.Accounts.DebtAccounts.Count() > 0)
             {
-                await Html.RenderPartialAsync("_Debt", Model.Accounts.DebtAccounts.First());
+                var debtAcc = Model.Accounts.DebtAccounts.First();
+                await Html.RenderPartialAsync("_Debt", debtAcc);
+                if(debtAcc.PaymentsBehind > 0)
+                {
+                    await Html.RenderPartialAsync("_Payment", new YAB.Models.PaymentViewModel { AccountId = Model.Accounts.Id, DebtAccountId = debtAcc.Id });
+                }
             }
             @if (Model.Accounts.TermAccounts.Count() > 0)
             {

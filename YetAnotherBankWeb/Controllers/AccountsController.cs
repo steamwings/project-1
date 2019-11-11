@@ -26,39 +26,6 @@ namespace YetAnotherBankWeb.Controllers
         private readonly UserManager<YABUser> _userManager;
         private readonly BL _bl;
 
-
-        private void ClearModelState()
-        {
-            TempData["ModelState"] = null;
-        }
-        //TODO Move to parent/static class
-        private void SaveModelState()
-        {
-            if (ModelState.IsValid) return;
-            //Dictionary<string, (object, string, string)> values = new Dictionary<string, (object,string,string)>();
-            Dictionary<string, string> errors = new Dictionary<string, string>();
-            foreach (var kv in ModelState)
-            {
-                //values[kv.Key] = (kv.Value.RawValue,kv.Value.AttemptedValue, kv.Value.Errors.FirstOrDefault()?.ErrorMessage);
-                errors[kv.Key] = kv.Value.Errors.FirstOrDefault()?.ErrorMessage;
-            }
-            TempData["ModelState"] = errors;
-        }
-
-        // TODO Move to parent/static class
-        private void GetModelState()
-        {
-            if (TempData["ModelState"] is null) return;
-            //var d = (Dictionary<string,(object,string,string)>) TempData["ModelState"];
-            var d = (Dictionary<string, string>)TempData["ModelState"];
-            foreach (var key in d.Keys)
-            {
-                //(var raw, var attempt, var e) = d[key];
-                //ModelState.SetModelValue(key, raw, attempt);
-                if(!string.IsNullOrEmpty(d[key])) ModelState.AddModelError(key, d[key]);
-            }
-        }
-
         // TODO Move to parent/static class
         private string UID()
         {
@@ -78,7 +45,6 @@ namespace YetAnotherBankWeb.Controllers
         // GET: Accounts
         public async Task<IActionResult> Index()
         {
-            ClearModelState();
             return View(await _arepo.GetAll(UID()));
         }
 
@@ -125,6 +91,7 @@ namespace YetAnotherBankWeb.Controllers
                 return NotFound();
             }
             ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
+            ViewData["CheckingAccounts"] = new SelectList(await _bl.GetChecking(_context, UID()), "Id", "Name");
             return View("Details", CreateDetailsVM(accounts));
         }
 
@@ -142,6 +109,7 @@ namespace YetAnotherBankWeb.Controllers
                     {
                         ModelState.AddModelError("Amount", "Insufficient funds. Negative balance prohibited.");
                         ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
+                        ViewData["CheckingAccounts"] = new SelectList(await _bl.GetChecking(_context, UID()), "Id", "Name");
                         return View("Details", CreateDetailsVM(await _arepo.Get(UID(), vm.AccountId)));
                     }
                     a.Balance = newBal;
@@ -160,6 +128,7 @@ namespace YetAnotherBankWeb.Controllers
             else
             {
                 ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
+                ViewData["CheckingAccounts"] = new SelectList(await _bl.GetChecking(_context, UID()), "Id", "Name");
                 return View("Details", CreateDetailsVM(await _arepo.Get(UID(), vm.AccountId)));
             }
         }
@@ -175,6 +144,7 @@ namespace YetAnotherBankWeb.Controllers
                 return await WithdrawDeposit(vm, false);
             }
             ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
+            ViewData["CheckingAccounts"] = new SelectList(await _bl.GetChecking(_context, UID()), "Id", "Name");
             return View("Details", CreateDetailsVM(await _arepo.Get(UID(), vm.AccountId), vm));
         }
 
@@ -188,6 +158,7 @@ namespace YetAnotherBankWeb.Controllers
                 return await WithdrawDeposit(vm, true);
             }
             ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
+            ViewData["CheckingAccounts"] = new SelectList(await _bl.GetChecking(_context, UID()), "Id", "Name");
             return View("Details", CreateDetailsVM(await _arepo.Get(UID(), vm.AccountId), vm));
         }
 
@@ -203,6 +174,13 @@ namespace YetAnotherBankWeb.Controllers
                     {
                         Accounts a = await _arepo.Get(UID(), vm.AccountId);
                         Accounts debt = await _arepo.Get(UID(), vm.DebtAccountId);
+                        if (debt.Balance == 0)
+                        {
+                            ModelState.AddModelError("", "Debt has been paid off!");
+                            ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
+                            ViewData["CheckingAccounts"] = new SelectList(await _bl.GetChecking(_context, UID()), "Id", "Name");
+                            return View("Details", CreateDetailsVM(await _arepo.Get(UID(), vm.AccountId)));
+                        }
                         var paymentAmt = debt.DebtAccounts.Single().PaymentAmount;
                         var amt = (paymentAmt > debt.Balance) ? debt.Balance : paymentAmt; 
                         var newBal = a.Balance - amt;
@@ -210,11 +188,13 @@ namespace YetAnotherBankWeb.Controllers
                         {
                             ModelState.AddModelError("AccountId", "Insufficient funds in this account.");
                             ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
+                            ViewData["CheckingAccounts"] = new SelectList(await _bl.GetChecking(_context, UID()), "Id", "Name");
                             return View("Details", CreateDetailsVM(await _arepo.Get(UID(), vm.AccountId)));
                         }
                         a.Balance = newBal;
                         debt.Balance += amt;
-                        if(debt.Balance != 0) debt.DebtAccounts.Single().NextPaymentDue = debt.DebtAccounts.Single().NextPaymentDue.AddMonths(1);
+                        if (debt.DebtAccounts.Single().PaymentsBehind > 0) debt.DebtAccounts.Single().PaymentsBehind--;
+                        else if (debt.Balance != 0) debt.DebtAccounts.Single().NextPaymentDue = debt.DebtAccounts.Single().NextPaymentDue.AddMonths(1);
                         _trepo.Add("Payment", amt, vm.AccountId, vm.DebtAccountId);
                         _context.Update(a);
                         _context.Update(debt);
@@ -228,6 +208,8 @@ namespace YetAnotherBankWeb.Controllers
                     }
                 }
             }
+            ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
+            ViewData["CheckingAccounts"] = new SelectList(await _bl.GetChecking(_context, UID()), "Id", "Name");
             return View("Details", CreateDetailsVM(await _arepo.Get(UID(), vm.DebtAccountId)));
         }
 
@@ -465,6 +447,39 @@ namespace YetAnotherBankWeb.Controllers
             _context.Accounts.Remove(accounts);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+
+        private void ClearModelState()
+        {
+            TempData["ModelState"] = null;
+        }
+        //TODO Move to parent/static class
+        private void SaveModelState()
+        {
+            if (ModelState.IsValid) return;
+            //Dictionary<string, (object, string, string)> values = new Dictionary<string, (object,string,string)>();
+            Dictionary<string, string> errors = new Dictionary<string, string>();
+            foreach (var kv in ModelState)
+            {
+                //values[kv.Key] = (kv.Value.RawValue,kv.Value.AttemptedValue, kv.Value.Errors.FirstOrDefault()?.ErrorMessage);
+                errors[kv.Key] = kv.Value.Errors.FirstOrDefault()?.ErrorMessage;
+            }
+            TempData["ModelState"] = errors;
+        }
+
+        // TODO Move to parent/static class
+        private void GetModelState()
+        {
+            if (TempData["ModelState"] is null) return;
+            //var d = (Dictionary<string,(object,string,string)>) TempData["ModelState"];
+            var d = (Dictionary<string, string>)TempData["ModelState"];
+            foreach (var key in d.Keys)
+            {
+                //(var raw, var attempt, var e) = d[key];
+                //ModelState.SetModelValue(key, raw, attempt);
+                if (!string.IsNullOrEmpty(d[key])) ModelState.AddModelError(key, d[key]);
+            }
         }
     }
 }

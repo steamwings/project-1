@@ -15,6 +15,7 @@ namespace YAB.Models
         public decimal PaymentAmount { get; set; }
         [Required]
         [Display(Name="Payments Owed")]
+        // Note: this should be called "owed" since it will be 1 when you haven't paid the current month
         public int PaymentsBehind { get; set; }
         [Display(Name = "Next Payment Due")]
         public DateTime NextPaymentDue { get; set; }

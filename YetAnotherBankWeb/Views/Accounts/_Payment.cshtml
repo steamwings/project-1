@@ -1,19 +1,21 @@
 ﻿@model YAB.Models.PaymentViewModel
 
-<div style="display:none" id="divPaymentForm">
-    <form id="formWD" asp-action="Payment" onchange="checkSubmit_WD();" oncreate="disableEnter();">
+<div id="divPaymentForm" onload="location.reload();">
+    <script src="~/js/account.js"></script>
+    <h4> Make a Payment </h4>
+    <form id="formPayment" asp-action="Payment" onchange="checkSubmit_Payment();" oncreate="disableForm('formPayment');">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="form-group">
             <label id="labelSelectAccount" class="control-label"></label>
-            <select id="selectAccount" asp-for="AccountId" class="form-control" asp-items="ViewBag.Accounts">
+            <select id="selectAccount" asp-for="AccountId" class="form-control" asp-items="ViewBag.CheckingAccounts">
                 <option disabled selected value=""> -- select account -- </option>
             </select>
             <span asp-validation-for="AccountId" class="text-danger"></span>
         </div>
 
         <div id="divSubmit" style="display:none" class="form-group">
-            <input id="btnSubmit" type="submit" value="Withdraw" class="btn btn-primary" />
+            <input id="btnSubmit" type="submit" value="Submit Payment" class="btn btn-primary" />
         </div>
     </form>
 </div>

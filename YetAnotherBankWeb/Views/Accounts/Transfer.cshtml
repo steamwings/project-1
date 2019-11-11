@@ -6,14 +6,14 @@
     var toAcc = (SelectList) ViewData["Accounts"];
 }
 
-    <script src="~/js/account.js"></script>
+<script src="~/js/account.js"></script>
 
 <h1>Transfer</h1>
 <hr />
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="DoTransfer" onload="location.reload();" onchange="checkSubmit_Tx();" oncreate="disableEnter();">
+        <form id="formTx" asp-action="DoTransfer" onload="location.reload();" onchange="checkSubmit_Tx();" oncreate="disableForm('formTx');">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="AccountFromId" class="control-label"></label>

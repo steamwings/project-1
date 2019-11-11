@@ -48,7 +48,8 @@ function checkSubmit_WD() {
 }
 
 function checkSubmit_Payment() {
-    if (!hasVal("AccountId")) {
+    hello();
+    if (document.getElementById("AccountId").Value == "") {
         hide("divSubmit");
         disableForm();
         return;
