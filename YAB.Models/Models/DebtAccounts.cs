@@ -10,6 +10,7 @@ namespace YAB.Models
         [Required]
         public long AccountId { get; set; }
         [Required]
+        [DataType(DataType.Currency)]
         [Display(Name ="Payment Amount")]
         public decimal PaymentAmount { get; set; }
         [Required]

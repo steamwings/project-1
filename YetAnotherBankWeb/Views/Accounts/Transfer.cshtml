@@ -15,7 +15,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="AccountFromId" class="control-label"></label>
-                <select id="selectOutOf" onchange="disableOption_Tx('selectOutOf','selectInto');" asp-for="AccountFromId" class="form-control" asp-items="ViewBag.Accounts">
+                <select id="selectOutOf" onchange="disableOption_Tx('selectOutOf','selectInto');" asp-for="AccountFromId" class="form-control" asp-items="ViewBag.CheckingAccounts">
                     <option disabled selected value=""> -- select account to transfer out of -- </option>
                 </select>
             </div>

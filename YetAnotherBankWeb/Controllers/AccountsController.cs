@@ -11,9 +11,22 @@ using YAB.Models;
 using YAB.Models.Repos;
 using Microsoft.AspNetCore.Identity;
 using YetAnotherBankWeb.Areas.Identity.Data;
+using YAB.BusinessLayer;
 
 namespace YetAnotherBankWeb.Controllers
 {
+    class FormError
+    {
+        public string Property { get; }
+        public string Message { get; }
+        public FormError(string p, string m)
+        {
+            Property = p;
+            Message = m;
+        }
+    }
+
+
     [Authorize]
     public class AccountsController : Controller
     {
@@ -22,8 +35,32 @@ namespace YetAnotherBankWeb.Controllers
         private readonly Project1Context _context; //TODO Remove
         private readonly ILogger<AccountsController> _logger;
         private readonly UserManager<YABUser> _userManager;
-        private WithdrawDepositViewModel wdvm;
+        private readonly BL _bl;
 
+
+        //TODO Move to parent/static class
+        private void GetFormErrors()
+        {
+            foreach(var e in ModelState)
+            {
+                TempData[""] = new FormError()
+            }
+        }
+
+        // TODO Move to parent/static class
+        private void SetFormErrors()
+        {
+            int error = 1;
+            string key = "FormError1";
+            while (TempData[key] != null)
+            {
+                var formError = (FormError)TempData[key];
+                ModelState.AddModelError(formError.Property, formError.Message);
+                key.Replace(error.ToString(), (++error).ToString());
+            }
+        }
+
+        // TODO Move to parent/static class
         private string UID()
         {
             return _userManager.GetUserId(User);
@@ -34,8 +71,9 @@ namespace YetAnotherBankWeb.Controllers
             _userManager = userManager;
             _logger = logger;
             _context = context;
-            _arepo = new AccountsRepo(context);
-            _trepo = new TransactionsRepo(context);
+            _arepo = new AccountsRepo(context); //TODO Remove
+            _trepo = new TransactionsRepo(context); //TODO Remove
+            _bl = new BL(context);
         }
 
         // GET: Accounts
@@ -105,7 +143,7 @@ namespace YetAnotherBankWeb.Controllers
                     if (newBal < 0 && !a.Business)
                     {
                         ModelState.AddModelError("Amount", "Insufficient funds.");
-                        return await Details(vm.AccountId, wdvm = vm);
+                        return await Details(vm.AccountId, vm);
                     }
                     a.Balance = newBal;
                     _trepo.Add(Deposit ? "Deposit" : "Withdrawal", vm.Amount, null, vm.AccountId);
@@ -133,7 +171,7 @@ namespace YetAnotherBankWeb.Controllers
                 // TODO BL to verify
                 return await WithdrawDeposit(vm, false);
             }
-            return await Details(vm.AccountId, wdvm=vm);
+            return await Details(vm.AccountId, vm);
         }
 
         // POST: Accounts/Deposit
@@ -145,7 +183,7 @@ namespace YetAnotherBankWeb.Controllers
             {
                 return await WithdrawDeposit(vm, true);
             }
-            return await Details(vm.AccountId, wdvm = vm);
+            return await Details(vm.AccountId, vm);
         }
 
         // GET: Accounts/Create
@@ -237,10 +275,12 @@ namespace YetAnotherBankWeb.Controllers
         {
             if(await _arepo.Count(UID()) < 2) //TODO Notify user of what's wrong
                 return RedirectToAction(nameof(Index));
+            SetFormErrors();
+            ViewData["CheckingAccounts"] = new SelectList(await _bl.GetChecking(UID()), "Id", "Name");
             ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
             return View(vm);
         }
-
+       
         // POST: Accounts/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -250,6 +290,7 @@ namespace YetAnotherBankWeb.Controllers
         {
             if (!ModelState.IsValid)
             {
+                
                 return RedirectToAction(nameof(Transfer), vm);
             }
 
@@ -261,7 +302,11 @@ namespace YetAnotherBankWeb.Controllers
                     Accounts into = _context.Accounts.Find(vm.AccountToId);
                     Accounts outof = _context.Accounts.Find(vm.AccountFromId);
                     var newBal = outof.Balance - vm.Amount;
-                    if (vm.Amount < 0 || (newBal < 0 && !into.Business)) return RedirectToAction(nameof(Index));
+                    if (vm.Amount < 0 || (newBal < 0 && !into.Business))
+                    {
+                        TempData["FormError1"] = new FormError("Amount", "Insufficient funds.");
+                        return RedirectToAction(nameof(Transfer), vm);
+                    }
                     outof.Balance = newBal;
                     into.Balance += vm.Amount;
                     _trepo.Add("Transfer", vm.Amount, vm.AccountFromId, vm.AccountToId);

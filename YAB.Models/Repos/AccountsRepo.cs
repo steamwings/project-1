@@ -26,6 +26,11 @@ namespace YAB.Models.Repos
             return UserAccounts(userId).CountAsync();
         }
 
+        public int GetTypeId(string typeName)
+        {
+            return _context.AccountTypes.Where(a => a.Name == typeName).Single().Id;
+        }
+
         public Task<Accounts> Get(string userId, long accId)
         {
             return _context.Accounts.Intersect(UserAccounts(userId)).Where(a => a.Id == accId)
