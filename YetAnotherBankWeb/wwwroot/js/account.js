@@ -47,6 +47,16 @@ function checkSubmit_WD() {
     enableForm();
 }
 
+function checkSubmit_Payment() {
+    if (!hasVal("AccountId")) {
+        hide("divSubmit");
+        disableForm();
+        return;
+    };
+    show("divSubmit");
+    enableForm();
+}
+
 function updateFromType_New() {
     var type = document.getElementById("TypeId").value;
     switch (type) {

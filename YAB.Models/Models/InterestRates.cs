@@ -15,6 +15,7 @@ namespace YAB.Models
         [Required]
         public string Name { get; set; }
         [Required]
+        [DisplayFormat(DataFormatString ="{0:0.00000}")]
         public decimal Rate { get; set; }
         public int? Years { get; set; }
         [Required]

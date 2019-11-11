@@ -140,9 +140,9 @@ namespace YetAnotherBankWeb.Controllers
                     var newBal = a.Balance + (Deposit ? vm.Amount : -vm.Amount);
                     if (newBal < 0 && !a.Business)
                     {
-                        ModelState.AddModelError("Amount", "Insufficient funds.");
+                        ModelState.AddModelError("Amount", "Insufficient funds. Negative balance prohibited.");
                         ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
-                        return View("Details");
+                        return View("Details", CreateDetailsVM(await _arepo.Get(UID(), vm.AccountId)));
                     }
                     a.Balance = newBal;
                     _trepo.Add(Deposit ? "Deposit" : "Withdrawal", vm.Amount, null, vm.AccountId);
@@ -189,6 +189,46 @@ namespace YetAnotherBankWeb.Controllers
             }
             ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
             return View("Details", CreateDetailsVM(await _arepo.Get(UID(), vm.AccountId), vm));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Payment(PaymentViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        Accounts a = await _arepo.Get(UID(), vm.AccountId);
+                        Accounts debt = await _arepo.Get(UID(), vm.DebtAccountId);
+                        var paymentAmt = debt.DebtAccounts.Single().PaymentAmount;
+                        var amt = (paymentAmt > debt.Balance) ? debt.Balance : paymentAmt; 
+                        var newBal = a.Balance - amt;
+                        if (newBal < 0 && !a.Business)
+                        {
+                            ModelState.AddModelError("AccountId", "Insufficient funds in this account.");
+                            ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
+                            return View("Details", CreateDetailsVM(await _arepo.Get(UID(), vm.AccountId)));
+                        }
+                        a.Balance = newBal;
+                        debt.Balance += amt;
+                        if(debt.Balance != 0) debt.DebtAccounts.Single().NextPaymentDue = debt.DebtAccounts.Single().NextPaymentDue.AddMonths(1);
+                        _trepo.Add("Payment", amt, vm.AccountId, vm.DebtAccountId);
+                        _context.Update(a);
+                        _context.Update(debt);
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError("Payment failed.", e);
+                        throw e; // TODO Not this
+                    }
+                }
+            }
+            return View("Details", CreateDetailsVM(await _arepo.Get(UID(), vm.DebtAccountId)));
         }
 
         // GET: Accounts/Create
@@ -245,7 +285,7 @@ namespace YetAnotherBankWeb.Controllers
                     a.DebtAccounts.Add(new DebtAccounts()
                     {
                         PaymentAmount = 250.00M, //TODO Don't hardcode
-                        PaymentsBehind = 0,
+                        PaymentsBehind = 1,
                         NextPaymentDue = DateTime.Now.AddMonths(1)
                     }) ;
                     break;

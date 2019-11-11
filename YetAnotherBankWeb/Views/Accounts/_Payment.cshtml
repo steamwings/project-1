@@ -1,7 +1,7 @@
 ﻿@model YAB.Models.PaymentViewModel
 
 <div style="display:none" id="divPaymentForm">
-    <form id="formWD" asp-action="Deposit" onchange="checkSubmit_WD();" oncreate="disableEnter();">
+    <form id="formWD" asp-action="Payment" onchange="checkSubmit_WD();" oncreate="disableEnter();">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="form-group">
@@ -9,13 +9,9 @@
             <select id="selectAccount" asp-for="AccountId" class="form-control" asp-items="ViewBag.Accounts">
                 <option disabled selected value=""> -- select account -- </option>
             </select>
+            <span asp-validation-for="AccountId" class="text-danger"></span>
         </div>
 
-        <div class="form-group">
-            <label id="labelAmount" asp-for="Amount" class="control-label"></label>
-            <input asp-for="Amount" class="form-control" />
-            <span asp-validation-for="Amount" class="text-danger"></span>
-        </div>
         <div id="divSubmit" style="display:none" class="form-group">
             <input id="btnSubmit" type="submit" value="Withdraw" class="btn btn-primary" />
         </div>
