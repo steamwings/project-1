@@ -15,17 +15,6 @@ using YAB.BusinessLayer;
 
 namespace YetAnotherBankWeb.Controllers
 {
-    class FormError
-    {
-        public string Property { get; }
-        public string Message { get; }
-        public FormError(string p, string m)
-        {
-            Property = p;
-            Message = m;
-        }
-    }
-
 
     [Authorize]
     public class AccountsController : Controller
@@ -38,25 +27,35 @@ namespace YetAnotherBankWeb.Controllers
         private readonly BL _bl;
 
 
-        //TODO Move to parent/static class
-        private void GetFormErrors()
+        private void ClearModelState()
         {
-            foreach(var e in ModelState)
+            TempData["ModelState"] = null;
+        }
+        //TODO Move to parent/static class
+        private void SaveModelState()
+        {
+            if (ModelState.IsValid) return;
+            //Dictionary<string, (object, string, string)> values = new Dictionary<string, (object,string,string)>();
+            Dictionary<string, string> errors = new Dictionary<string, string>();
+            foreach (var kv in ModelState)
             {
-                TempData[""] = new FormError()
+                //values[kv.Key] = (kv.Value.RawValue,kv.Value.AttemptedValue, kv.Value.Errors.FirstOrDefault()?.ErrorMessage);
+                errors[kv.Key] = kv.Value.Errors.FirstOrDefault()?.ErrorMessage;
             }
+            TempData["ModelState"] = errors;
         }
 
         // TODO Move to parent/static class
-        private void SetFormErrors()
+        private void GetModelState()
         {
-            int error = 1;
-            string key = "FormError1";
-            while (TempData[key] != null)
+            if (TempData["ModelState"] is null) return;
+            //var d = (Dictionary<string,(object,string,string)>) TempData["ModelState"];
+            var d = (Dictionary<string, string>)TempData["ModelState"];
+            foreach (var key in d.Keys)
             {
-                var formError = (FormError)TempData[key];
-                ModelState.AddModelError(formError.Property, formError.Message);
-                key.Replace(error.ToString(), (++error).ToString());
+                //(var raw, var attempt, var e) = d[key];
+                //ModelState.SetModelValue(key, raw, attempt);
+                if(!string.IsNullOrEmpty(d[key])) ModelState.AddModelError(key, d[key]);
             }
         }
 
@@ -79,6 +78,7 @@ namespace YetAnotherBankWeb.Controllers
         // GET: Accounts
         public async Task<IActionResult> Index()
         {
+            ClearModelState();
             return View(await _arepo.GetAll(UID()));
         }
 
@@ -111,9 +111,8 @@ namespace YetAnotherBankWeb.Controllers
             return dvm;
         }
         
-
         // GET: Accounts/Details/5
-        public async Task<IActionResult> Details(long? id, WithdrawDepositViewModel wdvm = null)
+        public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
             {
@@ -126,8 +125,7 @@ namespace YetAnotherBankWeb.Controllers
                 return NotFound();
             }
             ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
-            
-            return View("Details", CreateDetailsVM(accounts, wdvm));
+            return View("Details", CreateDetailsVM(accounts));
         }
 
         // TODO Move to business logic
@@ -143,7 +141,8 @@ namespace YetAnotherBankWeb.Controllers
                     if (newBal < 0 && !a.Business)
                     {
                         ModelState.AddModelError("Amount", "Insufficient funds.");
-                        return await Details(vm.AccountId, vm);
+                        ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
+                        return View("Details");
                     }
                     a.Balance = newBal;
                     _trepo.Add(Deposit ? "Deposit" : "Withdrawal", vm.Amount, null, vm.AccountId);
@@ -158,7 +157,11 @@ namespace YetAnotherBankWeb.Controllers
                 }
             }
             if (a is null) return View("Index");
-            else return RedirectToAction(nameof(Details),new { a.Id });
+            else
+            {
+                ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
+                return View("Details", CreateDetailsVM(await _arepo.Get(UID(), vm.AccountId)));
+            }
         }
 
         // POST: Accounts/Withdraw
@@ -171,7 +174,8 @@ namespace YetAnotherBankWeb.Controllers
                 // TODO BL to verify
                 return await WithdrawDeposit(vm, false);
             }
-            return await Details(vm.AccountId, vm);
+            ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
+            return View("Details", CreateDetailsVM(await _arepo.Get(UID(), vm.AccountId), vm));
         }
 
         // POST: Accounts/Deposit
@@ -183,17 +187,18 @@ namespace YetAnotherBankWeb.Controllers
             {
                 return await WithdrawDeposit(vm, true);
             }
-            return await Details(vm.AccountId, vm);
+            ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
+            return View("Details", CreateDetailsVM(await _arepo.Get(UID(), vm.AccountId), vm));
         }
 
         // GET: Accounts/Create
-        public IActionResult New(NewAccountViewModel vm = null)
+        public IActionResult New()
         {
             ViewData["AccountTypeId"] = new SelectList(_context.AccountTypes, "Id", "Name");
             ViewData["InterestId_Checking"] = new SelectList(_context.InterestRates.Where(i => i.Type.Name == "Checking"), "Id", "Name");
             ViewData["InterestId_Loan"] = new SelectList(_context.InterestRates.Where(i => i.Type.Name == "Loan"), "Id", "Name");
             ViewData["InterestId_Investment"] = new SelectList(_context.InterestRates.Where(i => i.Type.Name == "Investment"), "Id", "Name");
-            return View(vm);
+            return View();
         }
 
         // POST: Accounts/Create
@@ -201,7 +206,14 @@ namespace YetAnotherBankWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(NewAccountViewModel account)
         {
-            if (!ModelState.IsValid) return RedirectToAction(nameof(New),account); //TODO Indicate error
+            if (!ModelState.IsValid)
+            {
+                ViewData["AccountTypeId"] = new SelectList(_context.AccountTypes, "Id", "Name");
+                ViewData["InterestId_Checking"] = new SelectList(_context.InterestRates.Where(i => i.Type.Name == "Checking"), "Id", "Name");
+                ViewData["InterestId_Loan"] = new SelectList(_context.InterestRates.Where(i => i.Type.Name == "Loan"), "Id", "Name");
+                ViewData["InterestId_Investment"] = new SelectList(_context.InterestRates.Where(i => i.Type.Name == "Investment"), "Id", "Name");
+                return View("New");
+            }
 
             var type = _context.AccountTypes.Find(account.TypeId);
             Accounts a = new Accounts()
@@ -216,7 +228,6 @@ namespace YetAnotherBankWeb.Controllers
                 InterestId = account.InterestId
             };
 
-            if (type.Name is null) return NotFound("name");
             switch (type.Name)
             {
                 case "Checking":
@@ -269,16 +280,17 @@ namespace YetAnotherBankWeb.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
         // GET: Accounts/Transfer
         [HttpGet]
-        public async Task<IActionResult> Transfer(TransferViewModel vm = null)
+        public async Task<IActionResult> Transfer()
         {
             if(await _arepo.Count(UID()) < 2) //TODO Notify user of what's wrong
                 return RedirectToAction(nameof(Index));
-            SetFormErrors();
-            ViewData["CheckingAccounts"] = new SelectList(await _bl.GetChecking(UID()), "Id", "Name");
+            //GetModelState();
+            ViewData["CheckingAccounts"] = new SelectList(await _bl.GetChecking(_context, UID()), "Id", "Name");
             ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
-            return View(vm);
+            return View();
         }
        
         // POST: Accounts/Create
@@ -290,8 +302,11 @@ namespace YetAnotherBankWeb.Controllers
         {
             if (!ModelState.IsValid)
             {
-                
-                return RedirectToAction(nameof(Transfer), vm);
+                ViewData["CheckingAccounts"] = new SelectList(await _bl.GetChecking(_context, UID()), "Id", "Name");
+                ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
+                return View("Transfer");
+                //SaveModelState();
+                //return RedirectToAction(nameof(Transfer));
             }
 
             using (var transaction = _context.Database.BeginTransaction())
@@ -304,8 +319,12 @@ namespace YetAnotherBankWeb.Controllers
                     var newBal = outof.Balance - vm.Amount;
                     if (vm.Amount < 0 || (newBal < 0 && !into.Business))
                     {
-                        TempData["FormError1"] = new FormError("Amount", "Insufficient funds.");
-                        return RedirectToAction(nameof(Transfer), vm);
+                        ModelState.AddModelError("Amount", "Insufficient funds.");
+                        //SaveModelState();
+                        //return RedirectToAction(nameof(Transfer));
+                        ViewData["CheckingAccounts"] = new SelectList(await _bl.GetChecking(_context, UID()), "Id", "Name");
+                        ViewData["Accounts"] = new SelectList(await _arepo.GetAll(UID()), "Id", "Name");
+                        return View("Transfer");
                     }
                     outof.Balance = newBal;
                     into.Balance += vm.Amount;
@@ -321,6 +340,7 @@ namespace YetAnotherBankWeb.Controllers
                     throw e; // TODO Not this
                 }
             }
+
             return RedirectToAction(nameof(Index));
         }
 

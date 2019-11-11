@@ -11,26 +11,18 @@ namespace YAB.BusinessLayer
     public partial class BL
     {
         private Project1Context _context = null;
-        private readonly AccountsRepo _arepo;
 
         public BL(Project1Context c)
         {
             _context = c;
-            _arepo = new AccountsRepo(c);
         }
 
-        public Accounts CreateAccount(NewAccountViewModel vm)
-        {
-            if (_context is null) return null;
-            Accounts a = new Accounts();
-            
-            return a;
-        }
 
-        public async Task<List<Accounts>> GetChecking(string userId)
+        public async Task<List<Accounts>> GetChecking(Project1Context c, string userId)
         {
-            List<Accounts> all = await _arepo.GetAll(userId);
-            return all.Where(a=> a.Type.Id == _arepo.GetTypeId("Checking")).ToList();
+            var _repo = new AccountsRepo(c);
+            List<Accounts> all = await _repo.GetAll(userId);
+            return all.Where(a=> a.Type.Id == _repo.GetTypeId("Checking")).ToList();
         }
 
     }
